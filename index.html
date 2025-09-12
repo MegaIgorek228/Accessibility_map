@@ -4,270 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Карта доступности нашего района</title>
-
-  <!-- Подключаем стили Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
   <style>
-    /* Стили для страницы */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
+    body { 
+      margin: 0; 
+      padding: 0; 
+      font-family: Arial, sans-serif; 
     }
-
-    #map {
-      width: 100%;
-      height: 100vh; /* Карта на весь экран */
+    #map { 
+      width: 100%; 
+      height: 100vh; 
     }
-
-    /* Стили для всплывающих окон */
     .leaflet-popup-content {
       font-size: 14px;
     }
-
     .leaflet-popup-content img {
       width: 100%;
       margin-top: 10px;
       border-radius: 4px;
     }
-  </style>
-</head>
-<body>
-<!-- Контейнер для карты -->
-<div id="map"></div>
-
-<!-- Подключаем Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script>
-  // Инициализация карты с центром в вашем районе
-  // Например, координаты центра Москвы: [55.7558, 37.6173]
-  var map = L.map('map').setView([55.811436, 37.501846], 16.5); // 16.5 - уровень приближения
-
-  // Добавляем слой с картой OpenStreetMap
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
-
-  // Создаем кастомные иконки разных цветов для разных статусов доступности
-  var greenIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
-
-  var redIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
-
-  var yellowIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
-
-  // Добавляем маркеры для разных объектов
-  // ЗЕЛЕНЫЙ - полностью доступно
-
-  var gmarker0 = L.marker([55.810476, 37.498286], {icon: greenIcon}).addTo(map);           // 1
-  gmarker0.bindPopup(`
-            <b>Приемная коммисия маи</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Пандус: нет<br>
-            • Двери: широкие<br>
-            • Лестница: широкая<br>
-            • Перила: есть, удобные<br>
-            <img src="img/priem_comissia.png" alt="Фото:">
-        `);
-  // ЗЕЛЕНЫЙ - полностью доступно
-  var gmarker1 = L.marker([55.810901, 37.498832], {icon: greenIcon}).addTo(map);            // 2
-  gmarker1.bindPopup(`
-            <b>Дворец культуры маи</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Пандус: не требуется<br>
-            • Лифт: есть<br>
-            • Двери: широкие<br>
-            <img src="img/castle_of_culture.png" alt="Фото:">
-        `);
-  // ЗЕЛЕНЫЙ - полностью доступно
-  var gmarker2 = L.marker([55.811605, 37.499038], {icon: greenIcon}).addTo(map);            // 3
-  gmarker2.bindPopup(`
-            <b>КПП 3</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Пандус: не требуется<br>
-            • Двери: обычные<br>
-            <img src="img/kpp№3.png" alt="Фото:">
-        `);
-  // ЗЕЛЕНЫЙ - полностью доступно
-  var gmarker3 = L.marker([55.811325, 37.498176], {icon: greenIcon}).addTo(map);            // 4
-  gmarker3.bindPopup(`
-            <b>Пешеходный переход</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Светофор: нет<br>
-            • Автомобили: мало<br>
-            • Дорога: ровная<br>
-            <img src="img/perehod.png" alt="Фото:">
-        `);
-  // ЗЕЛЕНЫЙ - полностью доступно
-  var gmarker4 = L.marker([55.810180, 37.497782], {icon: greenIcon}).addTo(map);            // 5
-  gmarker4.bindPopup(`
-            <b>Су-27</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Памятник: да<br>
-            • Красивый: да<br>
-            • Летает: нет(<br>
-            <img src="img/Cu-27.png" alt="Фото:">
-        `);
-  // ЗЕЛЕНЫЙ - полностью доступно
-  var gmarker5 = L.marker([55.810509, 37.497620], {icon: greenIcon}).addTo(map);            // 6
-  gmarker5.bindPopup(`
-            <b>Дубосекская улица(южная часть)</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Свободность: полностью свободно<br>
-            • Красивая: да<br>
-            • Чистота: очень чистая<br>
-            • Асфальт: очень ровный<br>
-            • Качели и скамейки: есть<br>
-            <img src="img/Dubosekskaya.png" alt="Фото:">
-        `);
-  // ЗЕЛЕНЫЙ - полностью доступно
-  var gmarker6 = L.marker([55.812260, 37.498794], {icon: greenIcon}).addTo(map);            // 7
-  gmarker6.bindPopup(`
-            <b>Дубосекская улица(центральная часть)</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Свободность: полностью свободно<br>
-            • Красивая: да<br>
-            • Чистота: очень чистая<br>
-            • Асфальт: очень ровный<br>
-            <img src="img/Dubo(centr).png" alt="Фото:">
-        `);
-  // ЗЕЛЕНЫЙ - полностью доступно
-  var gmarker7 = L.marker([55.813939, 37.498210], {icon: greenIcon}).addTo(map);            // 8
-  gmarker7.bindPopup(`
-            <b>Улица Константина Царева</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Свободность: полностью свободно<br>
-            • Красивая: да<br>
-            • Чистота: очень чистая<br>
-            • Асфальт: очень ровный<br>
-            • Пешеходный переход: есть<br>
-            <img src="img/Konstantin_carev_street.png" alt="Фото:">
-        `);
-
-  // ЗЕЛЕНЫЙ - полностью доступно
-  var gmarker8 = L.marker([55.813097, 37.501778], {icon: greenIcon}).addTo(map);           // 9
-  gmarker8.bindPopup(`
-            <b>Детский технопарк "Траектория взлёта"</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Пандус: нет<br>
-            • Двери: широкие<br>
-            • Лестница: широкая(2 ступеньки)<br>
-            <img src="img/child_technopark.png" alt="Фото:">
-        `);
-  // ЗЕЛЕНЫЙ - полностью доступно
-  var gmarker9 = L.marker([55.812596, 37.502458], {icon: greenIcon}).addTo(map);           // 9
-  gmarker9.bindPopup(`
-            <b>Пешходный переход</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Асфальт: ровный<br>
-            • Машины: средне количество(пропускают пешеходов)<br>
-            • Ступеньки: нет<br>
-            • Шумно: да(Ленинградское шосссе)<br>
-            <img src="img/child_technopark.png" alt="Фото:">
-        `);
-
-  // Желтый - частично доступно
-  var ymarker1 = L.marker([55.811411, 37.498942], {icon: yellowIcon}).addTo(map);           //
-  ymarker1.bindPopup(`
-            <b>Проход</b><br>
-            Статус: <span style="color: orange;">Частично доступно</span><br>
-            • Двери: нет<br>
-            • Дорога: средне<br>
-            <img src="img/near_3kpp.png" alt="Фото:">
-        `);
-  // Желтый - частично доступно
-  var ymarker2 = L.marker([55.813972, 37.499214], {icon: yellowIcon}).addTo(map);           // 6
-  ymarker2.bindPopup(`
-            <b>4ый институт</b><br>
-            Статус: <span style="color: orange;">Частично доступно</span><br>
-            • Двери: обычные<br>
-            • Лестница: широкая<br>
-            • Пандус: узкий<br>
-            <img src="img/4_institut.png" alt="Фото:">
-        `);
-  var ymarker3 = L.marker([55.814120, 37.500530], {icon: yellowIcon}).addTo(map);           // 5
-  ymarker3.bindPopup(`
-            <b>6ой институт</b><br>
-            Статус: <span style="color: orange;">Частичтно доступно</span><br>
-            • Пандус: нет<br>
-            • Двери: широкие<br>
-            • Лестница: широкая<br>
-            • Перила: есть<br>
-            <img src="img/6_institut.png" alt="Фото:">
-        `);
-  var ymarker4 = L.marker([55.812382, 37.502448], {icon: yellowIcon}).addTo(map);           // 5
-  ymarker4.bindPopup(`
-            <b>4ый кпп</b><br>
-            Статус: <span style="color: orange;">Частичтно доступно</span><br>
-            • Пандус: нет<br>
-            • Двери: обычные<br>
-            • Лестница: низкая, широкая<br>
-            • Перила: нет<br>
-            • Шлакбаум: есть<br>
-            <img src="img/kpp4.png" alt="Фото:">
-        `);
-
-  // КРАСНЫЙ - недоступно
-  var rmarker1 = L.marker([55.814366, 37.501316], {icon: redIcon}).addTo(map);                  // 4
-  rmarker1.bindPopup(`
-            <b>Лестница на мост победы</b><br>
-            Статус: <span style="color: red;">Недоступно</span><br>
-            • Пандус: очень крутой и узкий<br>
-            • Ступени: высокие<br>
-            • Лестница: высокая<br>
-            • Перила: неуддобные<br>
-            • Светофор: долгий<br>
-            <img src="img/lestniza.png" alt="Фото:">
-        `);
-
-  // Добавляем легенду (объяснение цветов)
-  var legend = L.control({position: 'bottomright'});
-  legend.onAdd = function(map) {
-    var div = L.DomUtil.create('div', 'info legend');
-    div.innerHTML = `
-                <h4>Маркеры:</h4>
-                <div><span style="color: green;">●</span> Полностью доступно</div>
-                <div><span style="color: orange;">●</span> Частично доступно</div>
-                <div><span style="color: red;">●</span> Недоступно</div>
-            `;
-    return div;
-  };
-  legend.addTo(map);
-
-  console.log("Карта успешно загружена! Можно добавлять новые маркеры.");
-</script>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Карта доступности нашего района</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <style>
-    body { margin: 0; padding: 0; font-family: Arial; }
-    #map { width: 100%; height: 100vh; }
-
-    /* Стили для панели управления */
     #control-panel {
       position: absolute;
       top: 10px;
@@ -287,89 +42,151 @@
       cursor: pointer;
       margin-bottom: 10px;
     }
-    button:hover { background: #45a049; }
+    button:hover { 
+      background: #45a049; 
+    }
   </style>
 </head>
 <body>
-<div id="map"></div>
+  <div id="map"></div>
+  
+  <div id="control-panel">
+    <h3>Управление картой</h3>
+    <button onclick="loadData()">Обновить карту</button>
+    <br>
+    <a href="https://docs.google.com/forms/d/1Cyn8VfR6RQKKLt9lm15SllafPy6gaNx6Ih-keJlrATE/edit" target="_blank">
+      <button>Добавить новое место</button>
+    </a>
+  </div>
 
-<!-- Панель управления -->
-<div id="control-panel">
-  <h3>Управление картой</h3>
-  <button onclick="loadData()">Обновить карту</button>
-  <br>
-  <a href="https://docs.google.com/forms/d/1Cyn8VfR6RQKKLt9lm15SllafPy6gaNx6Ih-keJlrATE/edit" target="_blank">
-    <button>Добавить новое место</button>
-  </a>
-</div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Инициализация карты
+    var map = L.map('map').setView([55.811436, 37.501846], 16.5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-  // Инициализация карты
-  var map = L.map('map').setView([55.7558, 37.6173], 15);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
-
-  // Создаем иконки
-  var icons = {
-    'доступно': L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-      iconSize: [25, 41]
-    }),
-    'частично доступно': L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
-      iconSize: [25, 41]
-    }),
-    'недоступно': L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-      iconSize: [25, 41]
-    })
-  };
-
-  // Функция для загрузки данных из Google Apps Script
-  function loadData() {
-    // ЗАМЕНИТЕ НА ВАШ REAL URL из Apps Script!
-    var API_URL = 'https://script.google.com/macros/s/AKfycbw7WsdO8mPOSQuaQfPw1FKAYDwNlNTXLBBq0co6sXOLpN8V0RLvqjxbKUrAu00qCVxijQ/exec';
-
-    fetch(API_URL)
-      .then(response => response.json())
-      .then(data => {
-        // Удаляем старые маркеры
-        map.eachLayer(layer => {
-          if (layer instanceof L.Marker) {
-            map.removeLayer(layer);
-          }
-        });
-
-        // Добавляем новые маркеры из Google Sheets
-        data.forEach(point => {
-          if (point.lat && point.lng) {
-            var marker = L.marker(
-              [point.lat, point.lng],
-              {icon: icons[point.status] || icons['частично доступно']}
-            ).addTo(map);
-
-            marker.bindPopup(`
-                                <b>${point.name}</b><br>
-                                Статус: ${point.status}<br>
-                                ${point.description}<br>
-                                ${point.photoUrl ? `<img src="${point.photoUrl}" width="200"><br>` : ''}
-                                <small>Добавлено: ${point.date}</small>
-                            `);
-          }
-        });
-        alert('Данные обновлены! Новых точек: ' + data.length);
+    // Создаем иконки
+    var icons = {
+      'доступно': L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      }),
+      'частично доступно': L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      }),
+      'недоступно': L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
       })
-      .catch(error => {
-        console.error('Ошибка:', error);
-        alert('Ошибка загрузки данных');
-      });
-  }
+    };
 
-  // Загружаем данные при открытии страницы
-  loadData();
-</script>
-</body>
+    // Добавляем статические маркеры
+    function addStaticMarkers() {
+      // ЗЕЛЕНЫЕ маркеры
+      var gmarker0 = L.marker([55.810476, 37.498286], {icon: icons['доступно']}).addTo(map);
+      gmarker0.bindPopup(`<b>Приемная коммисия маи</b><br>Статус: <span style="color: green;">Полностью доступно</span>`);
+
+      var gmarker1 = L.marker([55.810901, 37.498832], {icon: icons['доступно']}).addTo(map);
+      gmarker1.bindPopup(`<b>Дворец культуры маи</b><br>Статус: <span style="color: green;">Полностью доступно</span>`);
+
+      // Добавьте остальные статические маркеры аналогично...
+      // ЖЕЛТЫЕ маркеры
+      var ymarker1 = L.marker([55.811411, 37.498942], {icon: icons['частично доступно']}).addTo(map);
+      ymarker1.bindPopup(`<b>Проход</b><br>Статус: <span style="color: orange;">Частично доступно</span>`);
+
+      // КРАСНЫЕ маркеры
+      var rmarker1 = L.marker([55.814366, 37.501316], {icon: icons['недоступно']}).addTo(map);
+      rmarker1.bindPopup(`<b>Лестница на мост победы</b><br>Статус: <span style="color: red;">Недоступно</span>`);
+    }
+
+    // Функция для загрузки данных из Google Apps Script
+    function loadData() {
+      var API_URL = 'https://script.google.com/macros/s/AKfycbxoXTV2m-i0Warq8gthztU1QPOOxdL-q27_Y7rF-oQ9FeW2neKqhY0igVu_SIzk5eyrZw/exec';
+
+      fetch(API_URL)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Ошибка сети: ' + response.status);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Данные получены:', data);
+          
+          // Удаляем только динамические маркеры (те что из Google Sheets)
+          // Статические маркеры останутся
+          map.eachLayer(layer => {
+            if (layer instanceof L.Marker && layer._popup && layer._popup._content.includes('Добавлено:')) {
+              map.removeLayer(layer);
+            }
+          });
+
+          // Добавляем новые маркеры из Google Sheets
+          if (data && data.length > 0) {
+            data.forEach(point => {
+              if (point.lat && point.lng) {
+                var marker = L.marker(
+                  [point.lat, point.lng],
+                  {icon: icons[point.status] || icons['частично доступно']}
+                ).addTo(map);
+
+                marker.bindPopup(`
+                  <b>${point.name}</b><br>
+                  Статус: ${point.status}<br>
+                  ${point.description || ''}<br>
+                  ${point.photoUrl ? `<img src="${point.photoUrl}" width="200"><br>` : ''}
+                  <small>Добавлено: ${point.date || 'не указано'}</small>
+                `);
+              }
+            });
+            alert('Данные обновлены! Новых точек: ' + data.length);
+          } else {
+            alert('Нет новых данных для отображения');
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка:', error);
+          alert('Ошибка загрузки данных: ' + error.message);
+        });
+    }
+
+    // Добавляем легенду
+    function addLegend() {
+      var legend = L.control({position: 'bottomright'});
+      legend.onAdd = function(map) {
+        var div = L.DomUtil.create('div', 'info legend');
+        div.innerHTML = `
+          <h4>Маркеры:</h4>
+          <div><span style="color: green;">●</span> Полностью доступно</div>
+          <div><span style="color: orange;">●</span> Частично доступно</div>
+          <div><span style="color: red;">●</span> Недоступно</div>
+        `;
+        return div;
+      };
+      legend.addTo(map);
+    }
+
+    // Инициализация при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+      addStaticMarkers();
+      addLegend();
+      loadData(); // Загружаем данные из Google Sheets
+    });
+  </script>
 </body>
 </html>
