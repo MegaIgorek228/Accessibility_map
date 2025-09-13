@@ -55,7 +55,7 @@
 
   // Создаем иконки
   var icons = {
-    'доступно': L.icon({
+    'Полностью доступно': L.icon({
       iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
       iconSize: [25, 41],
@@ -63,12 +63,12 @@
       popupAnchor: [1, -34],
       shadowSize: [41, 41]
     }),
-    'частично доступно': L.icon({
+    'Частично доступно': L.icon({
       iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
       iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
     }),
-    'недоступно': L.icon({
+    'Недоступно': L.icon({
       iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
       iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
@@ -81,7 +81,7 @@
   // Добавляем статические маркеры
   function addStaticMarkers() {
     // ЗЕЛЕНЫЕ маркеры
-    var gmarker0 = L.marker([55.810476, 37.498286], {icon: icons['доступно']}).addTo(map);           // 1
+    var gmarker0 = L.marker([55.810476, 37.498286], {icon: icons['Полностью доступно']}).addTo(map);           // 1
     gmarker0.bindPopup(`
             <b>Приемная коммисия маи</b><br>
             Статус: <span style="color: green;">Полностью доступно</span><br>
@@ -93,7 +93,7 @@
         `);
 
     // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker1 = L.marker([55.810901, 37.498832], {icon: icons['доступно']}).addTo(map);            // 2
+    var gmarker1 = L.marker([55.810901, 37.498832], {icon: icons['Полностью доступно']}).addTo(map);            // 2
     gmarker1.bindPopup(`
             <b>Дворец культуры маи</b><br>
             Статус: <span style="color: green;">Полностью доступно</span><br>
@@ -103,7 +103,7 @@
             <img src="img/castle_of_culture.png" alt="Фото:">
         `);
     // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker2 = L.marker([55.811605, 37.499038], {icon: icons['доступно']}).addTo(map);            // 3
+    var gmarker2 = L.marker([55.811605, 37.499038], {icon: icons['Полностью доступно']}).addTo(map);            // 3
     gmarker2.bindPopup(`
             <b>КПП 3</b><br>
             Статус: <span style="color: green;">Полностью доступно</span><br>
@@ -112,7 +112,7 @@
             <img src="img/kpp№3.png" alt="Фото:">
         `);
     // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker3 = L.marker([55.811325, 37.498176], {icon: icons['доступно']}).addTo(map);            // 4
+    var gmarker3 = L.marker([55.811325, 37.498176], {icon: icons['Полностью доступно']}).addTo(map);            // 4
     gmarker3.bindPopup(`
             <b>Пешеходный переход</b><br>
             Статус: <span style="color: green;">Полностью доступно</span><br>
@@ -122,7 +122,7 @@
             <img src="img/perehod.png" alt="Фото:">
         `);
     // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker4 = L.marker([55.810180, 37.497782], {icon: icons['доступно']}).addTo(map);            // 5
+    var gmarker4 = L.marker([55.810180, 37.497782], {icon: icons['Полностью доступно']}).addTo(map);            // 5
     gmarker4.bindPopup(`
             <b>Су-27</b><br>
             Статус: <span style="color: green;">Полностью доступно</span><br>
@@ -132,7 +132,7 @@
             <img src="img/Cu-27.png" alt="Фото:">
         `);
     // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker5 = L.marker([55.810509, 37.497620], {icon: icons['доступно']}).addTo(map);            // 6
+    var gmarker5 = L.marker([55.810509, 37.497620], {icon: icons['Полностью доступно']}).addTo(map);            // 6
     gmarker5.bindPopup(`
             <b>Дубосекская улица(южная часть)</b><br>
             Статус: <span style="color: green;">Полностью доступно</span><br>
@@ -144,7 +144,7 @@
             <img src="img/Dubosekskaya.png" alt="Фото:">
         `);
     // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker6 = L.marker([55.812260, 37.498794], {icon: icons['доступно']}).addTo(map);            // 7
+    var gmarker6 = L.marker([55.812260, 37.498794], {icon: icons['Полностью доступно']}).addTo(map);            // 7
     gmarker6.bindPopup(`
             <b>Дубосекская улица(центральная часть)</b><br>
             Статус: <span style="color: green;">Полностью доступно</span><br>
@@ -155,7 +155,7 @@
             <img src="img/Dubo(centr).png" alt="Фото:">
         `);
     // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker7 = L.marker([55.813939, 37.498210], {icon: icons['доступно']}).addTo(map);            // 8
+    var gmarker7 = L.marker([55.813939, 37.498210], {icon: icons['Полностью доступно']}).addTo(map);            // 8
     gmarker7.bindPopup(`
             <b>Улица Константина Царева</b><br>
             Статус: <span style="color: green;">Полностью доступно</span><br>
@@ -168,7 +168,7 @@
         `);
 
     // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker8 = L.marker([55.813097, 37.501778], {icon: icons['доступно']}).addTo(map);           // 9
+    var gmarker8 = L.marker([55.813097, 37.501778], {icon: icons['Полностью доступно']}).addTo(map);           // 9
     gmarker8.bindPopup(`
             <b>Детский технопарк "Траектория взлёта"</b><br>
             Статус: <span style="color: green;">Полностью доступно</span><br>
@@ -178,7 +178,7 @@
             <img src="img/child_technopark.png" alt="Фото:">
         `);
     // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker9 = L.marker([55.812596, 37.502458], {icon: icons['доступно']}).addTo(map);           // 9
+    var gmarker9 = L.marker([55.812596, 37.502458], {icon: icons['Полностью доступно']}).addTo(map);           // 9
     gmarker9.bindPopup(`
             <b>Пешходный переход</b><br>
             Статус: <span style="color: green;">Полностью доступно</span><br>
@@ -190,7 +190,7 @@
         `);
 
     // Желтый - частично доступно
-    var ymarker1 = L.marker([55.811411, 37.498942], {icon: icons['частично доступно']}).addTo(map);           //
+    var ymarker1 = L.marker([55.811411, 37.498942], {icon: icons['Частично доступно']}).addTo(map);           //
     ymarker1.bindPopup(`
             <b>Проход</b><br>
             Статус: <span style="color: orange;">Частично доступно</span><br>
@@ -199,7 +199,7 @@
             <img src="img/near_3kpp.png" alt="Фото:">
         `);
     // Желтый - частично доступно
-    var ymarker2 = L.marker([55.813972, 37.499214], {icon: icons['частично доступно']}).addTo(map);           // 6
+    var ymarker2 = L.marker([55.813972, 37.499214], {icon: icons['Частично доступно']}).addTo(map);           // 6
     ymarker2.bindPopup(`
             <b>4ый институт</b><br>
             Статус: <span style="color: orange;">Частично доступно</span><br>
@@ -208,7 +208,7 @@
             • Пандус: узкий<br>
             <img src="img/4_institut.png" alt="Фото:">
         `);
-    var ymarker3 = L.marker([55.814120, 37.500530], {icon: icons['частично доступно']}).addTo(map);           // 5
+    var ymarker3 = L.marker([55.814120, 37.500530], {icon: icons['Частично доступно']}).addTo(map);           // 5
     ymarker3.bindPopup(`
             <b>6ой институт</b><br>
             Статус: <span style="color: orange;">Частичтно доступно</span><br>
@@ -218,7 +218,7 @@
             • Перила: есть<br>
             <img src="img/6_institut.png" alt="Фото:">
         `);
-    var ymarker4 = L.marker([55.812382, 37.502448], {icon: icons['частично доступно']}).addTo(map);           // 5
+    var ymarker4 = L.marker([55.812382, 37.502448], {icon: icons['Частично доступно']}).addTo(map);           // 5
     ymarker4.bindPopup(`
             <b>4ый кпп</b><br>
             Статус: <span style="color: orange;">Частичтно доступно</span><br>
@@ -231,7 +231,7 @@
         `);
 
     // КРАСНЫЙ - недоступно
-    var rmarker1 = L.marker([55.814366, 37.501316], {icon: icons['недоступно']}).addTo(map);                  // 4
+    var rmarker1 = L.marker([55.814366, 37.501316], {icon: icons['Недоступно']}).addTo(map);                  // 4
     rmarker1.bindPopup(`
             <b>Лестница на мост победы</b><br>
             Статус: <span style="color: red;">Недоступно</span><br>
@@ -322,7 +322,6 @@
           throw new Error('Данные не являются массивом');
         }
 
-        // Удаляем только динамические маркеры
         map.eachLayer(layer => {
           if (layer instanceof L.Marker && layer._popup && layer._popup._content &&
             layer._popup._content.includes('Добавлено:')) {
@@ -345,11 +344,11 @@
                 ).addTo(map);
 
                 marker.bindPopup(`
-  <b>${point.name || 'Без названия'}</b><br>
-  Статус: ${point.status || 'не указан'}<br>
-  ${formatDescription(point.description)}<br>
-  ${photoUrl ? `<img src="${photoUrl}" width="200" style="max-height: 150px; object-fit: cover;" onerror="this.style.display='none'"><br>` : ''}
-  <small>Добавлено: ${point.date || 'не указано'}</small>
+            <b>${point.name || 'Без названия'}</b><br>
+            Статус: ${point.status || 'не указан'}<br>
+            ${formatDescription(point.description)}<br>
+            ${photoUrl ? `<img src="${photoUrl}" width="200" style="max-height: 150px; object-fit: cover;" onerror="this.style.display='none'"><br>` : ''}
+            <small>Добавлено: ${point.date || 'не указано'}</small>
 `);
                 addedCount++;
               } catch (e) {
@@ -357,7 +356,7 @@
               }
             }
           });
-          alert('Данные обновлены! Добавлено точек: ' + addedCount);
+          alert('Данные обновлены! Добавленных точек: ' + addedCount);
         } else {
           alert('Нет новых данных для отображения');
         }
