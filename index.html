@@ -78,17 +78,6 @@
 
   // Добавляем статические маркеры
   function addStaticMarkers() {
-    // ЗЕЛЕНЫЕ маркеры
-    var gmarker0 = L.marker([55.810476, 37.498286], {icon: icons['Полностью доступно']}).addTo(map);           // 1
-    gmarker0.bindPopup(`
-            <b>Приемная коммисия маи</b><br>
-            Статус: <span style="color: green;">Полностью доступно</span><br>
-            • Пандус: нет<br>
-            • Двери: широкие<br>
-            • Лестница: широкая<br>
-            • Перила: есть, удобные<br>
-            <img src="img/priem_comissia.png" alt="Фото:">
-        `);
 
     // ЗЕЛЕНЫЙ - полностью доступно
     var gmarker1 = L.marker([55.810901, 37.498832], {icon: icons['Полностью доступно']}).addTo(map);            // 2
@@ -226,6 +215,16 @@
             • Перила: нет<br>
             • Шлагбаум: есть<br>
             <img src="img/kpp4.png" alt="Фото:">
+        `);
+    var ymarker5 = L.marker([55.810476, 37.498286], {icon: icons['Частично доступно']}).addTo(map);           // 1
+    ymarker5.bindPopup(`
+            <b>Приемная коммисия маи</b><br>
+            Статус: <span style="color: green;">Полностью доступно</span><br>
+            • Пандус: нет<br>
+            • Двери: широкие<br>
+            • Лестница: широкая<br>
+            • Перила: есть, удобные<br>
+            <img src="img/priem_comissia.png" alt="Фото:">
         `);
 
     // КРАСНЫЙ - недоступно
