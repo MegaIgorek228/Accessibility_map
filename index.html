@@ -351,18 +351,28 @@
   // Иконки для маркеров
   const icons = {
     'Полностью доступно': L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconUrl: 'img/markers/marker-icon-2x-green1.png',
+      shadowUrl: 'img/markers/marker-shadow.png',
+      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+    }),
+    'Доступно': L.icon({
+        iconUrl: 'img/markers/marker-icon-2x-light-green.png',
+      shadowUrl: 'img/markers/marker-shadow.png',
       iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
     }),
     'Частично доступно': L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconUrl: 'img/markers/marker-icon-2x-gold.png',
+      shadowUrl: 'img/markers/marker-shadow.png',
+      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+    }),
+    'Труднодоступно': L.icon({
+      iconUrl: 'img/markers/marker-icon-2x-orange.png',
+      shadowUrl: 'img/markers/marker-shadow.png',
       iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
     }),
     'Недоступно': L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconUrl: 'img/markers/marker-icon-2x-red.png',
+      shadowUrl: 'img/markers/marker-shadow.png',
       iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
     })
   };
@@ -557,8 +567,8 @@
 
 
 
-      // Открываем Forms в новой вкладке (просто ссылка, без отправки)
-      window.open(formsUrl, '_blank');
+    // Открываем Forms в новой вкладке (просто ссылка, без отправки)
+    window.open(formsUrl, '_blank');
 
 
     // Убираем временный маркер
@@ -750,7 +760,7 @@
             • Пандус: нет<br>
             • Двери: широкие<br>
             • Лестница: широкая(2 ступеньки)<br>
-            <img src="img/child_technopark.png" alt="Фото:">
+            <img src="img/child_technopark.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
         `);
     // ЗЕЛЕНЫЙ - полностью доступно
     var gmarker9 = L.marker([55.812596, 37.502458], {icon: icons['Полностью доступно']}).addTo(map);           // 9
@@ -840,7 +850,9 @@
       div.innerHTML = `
         <h4 style="margin: 0 0 10px 0;">Маркеры:</h4>
         <div><span style="color: green;">●</span> Полностью доступно</div>
-        <div><span style="color: orange;">●</span> Частично доступно</div>
+        <div><span style="color: lightgreen;">●</span> Доступно</div>
+        <div><span style="color: gold;">●</span> Частично доступно</div>
+        <div><span style="color: orange;">●</span> Труднодоступно</div>
         <div><span style="color: red;">●</span> Недоступно</div>
       `;
       return div;
