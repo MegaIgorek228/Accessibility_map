@@ -719,6 +719,9 @@
       var div = L.DomUtil.create('div', 'info legend');
       div.style.padding = '10px';
       div.style.borderRadius = '5px';
+      div.style.background = 'var(--bg-color)';
+      div.style.color = 'var(--text-color)';
+      div.style.border = '1px solid var(--border-color)';
       div.innerHTML = `
         <h4 style="margin: 0 0 10px 0;">Маркеры:</h4>
         <div><span style="color: green;">●</span> Полностью доступно(М4)</div>
