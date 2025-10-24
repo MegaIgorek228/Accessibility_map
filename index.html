@@ -412,7 +412,7 @@
   let selectedFile = null;
 
   // ЕДИНЫЙ URL для всего!
-  const API_URL = 'https://script.google.com/macros/s/AKfycbxLpISji4lqvP2SPQMHxAkTJTbgS_Z7gbATtVNgmE4K20z4JbBBkLUOsRQ3ZA6-Sy1Fuw/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycby7n0Nh1zmD6gYWyoYEd6JuDMetX_Ky1FFIkIBfZrVsbkkQasIbd7bhLAtjHWd5qoa5xw/exec';
 
   // Иконки для маркеров
   const icons = {
@@ -509,8 +509,9 @@
       const file = e.target.files[0];
       if (file) {
         selectedFile = file;
-        document.getElementById('file-name').textContent = file.name;
+        document.getElementById('file-name').textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
 
+        // Показываем превью
         const reader = new FileReader();
         reader.onload = function(e) {
           document.getElementById('preview-img').src = e.target.result;
@@ -642,6 +643,16 @@
   }
 
   // Отправка новой метки
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Отправка новой метки с фото
   async function submitNewMarker() {
     const name = document.getElementById('marker-name').value;
     const status = document.getElementById('marker-status').value;
@@ -654,34 +665,60 @@
       return;
     }
 
+    let photoData = '';
+    let photoName = '';
+
+    // Если есть выбранный файл - конвертируем в Base64
+    if (selectedFile) {
+      try {
+        photoData = await fileToBase64(selectedFile);
+        photoName = selectedFile.name;
+        console.log('Фото подготовлено:', photoName);
+      } catch (error) {
+        console.error('Ошибка загрузки файла:', error);
+        alert('Ошибка при загрузке файла');
+        return;
+      }
+    }
+
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           name: name,
           lat: lat,
           lng: lng,
           status: status,
           description: description,
-          photoUrl: ''
+          photoData: photoData, // Отправляем данные фото
+          photoName: photoName  // Отправляем имя файла
         })
       });
 
-      const result = await response.json();
+      console.log('Запрос отправлен с фото:', photoName ? 'Да' : 'Нет');
 
-      if (result.success) {
-        alert('Метка успешно добавлена!');
-        closeAddMarkerModal();
-        setTimeout(loadData, 2000);
-      } else {
-        throw new Error(result.error);
-      }
+      alert('Метка отправлена на сохранение!' + (photoName ? '\nФото будет загружено.' : ''));
+      closeAddMarkerModal();
+
+      // Обновляем карту через 3 секунды
+      setTimeout(loadData, 3000);
 
     } catch (error) {
-      console.error('Ошибка:', error);
-      alert('Ошибка при сохранении: ' + error.message);
+      console.error('Ошибка отправки:', error);
+      alert('Ошибка при отправке данных: ' + error.message);
     }
+  }
+
+  // Сброс выбранного файла
+  function resetFileInput() {
+    selectedFile = null;
+    document.getElementById('marker-photo-file').value = '';
+    document.getElementById('file-name').textContent = 'Файл не выбран';
+    document.getElementById('image-preview').style.display = 'none';
   }
 
   function closeAddMarkerModal() {
@@ -719,9 +756,6 @@
       var div = L.DomUtil.create('div', 'info legend');
       div.style.padding = '10px';
       div.style.borderRadius = '5px';
-      div.style.background = 'var(--bg-color)';
-      div.style.color = 'var(--text-color)';
-      div.style.border = '1px solid var(--border-color)';
       div.innerHTML = `
         <h4 style="margin: 0 0 10px 0;">Маркеры:</h4>
         <div><span style="color: green;">●</span> Полностью доступно(М4)</div>
