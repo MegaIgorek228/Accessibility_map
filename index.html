@@ -344,13 +344,21 @@
       <div class="form-group">
         <label>Статус доступности:</label>
         <div id="status-options">
-          <div class="status-option" data-status="Полностью доступно">
+          <div class="status-option" data-status="Полностью доступно(М4)">
             <div class="status-color" style="background: green"></div>
-            <span>Полностью доступно</span>
+            <span>Полностью доступно(М4)</span>
           </div>
-          <div class="status-option" data-status="Частично доступно">
+          <div class="status-option" data-status="Доступно(М3)">
+            <div class="status-color" style="background: lightgreen"></div>
+            <span>Доступно(М3)</span>
+          </div>
+          <div class="status-option" data-status="Частично доступно(М2)">
             <div class="status-color" style="background: orange"></div>
-            <span>Частично доступно</span>
+            <span>Частично доступно(М2)</span>
+          </div>
+          <div class="status-option" data-status="Труднодоступно(М1)">
+            <div class="status-color" style="background: darkorange"></div>
+            <span>Труднодоступно(М1)</span>
           </div>
           <div class="status-option" data-status="Недоступно">
             <div class="status-color" style="background: red"></div>
@@ -435,9 +443,157 @@
     })
   };
 
+  // Инициализация карты
+  function initMap() {
+    map = L.map('map', { attributionControl: false }).setView([55.811436, 37.501846], 16.5);
+
+    currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '',
+      maxZoom: 19
+    }).addTo(map);
+
+    addLegend();
+    loadData();
+    initEventListeners();
+  }
+
+  // Инициализация обработчиков событий
+  function initEventListeners() {
+    // Управление меню
+    document.getElementById('menu-button').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.add('open');
+    });
+
+    document.querySelector('.close-btn').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.remove('open');
+    });
+
+    // Переключение темы
+    document.getElementById('theme-toggle').addEventListener('change', function(e) {
+      const isDark = e.target.checked;
+      document.body.classList.toggle('dark-theme', isDark);
+      updateMapTheme(isDark);
+    });
+
+    // Смена шрифта
+    document.getElementById('font-family-select').addEventListener('change', function(e) {
+      document.documentElement.style.setProperty('--font-family', e.target.value);
+      updateAllPopups();
+    });
+
+    document.getElementById('font-size-select').addEventListener('change', function(e) {
+      document.documentElement.style.setProperty('--font-size', e.target.value);
+      updateAllPopups();
+    });
+
+    // Добавление новой метки
+    document.getElementById('add-marker-btn').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.remove('open');
+      startAddMarkerMode();
+    });
+
+    // Выбор статуса доступности
+    document.querySelectorAll('.status-option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('selected'));
+        this.classList.add('selected');
+        document.getElementById('marker-status').value = this.dataset.status;
+      });
+    });
+
+    document.getElementById('choose-photo-btn').addEventListener('click', function() {
+      document.getElementById('marker-photo-file').click();
+    });
+
+    document.getElementById('marker-photo-file').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        selectedFile = file;
+        document.getElementById('file-name').textContent = file.name;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('preview-img').src = e.target.result;
+          document.getElementById('image-preview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Отмена добавления метки
+    document.getElementById('cancel-marker').addEventListener('click', () => {
+      closeAddMarkerModal();
+    });
+
+    // Отправка формы добавления метки
+    document.getElementById('add-marker-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      submitNewMarker();
+    });
+  }
+
+  // Обновление темы карты
+  function updateMapTheme(isDark) {
+    if (isDark) {
+      if (currentTileLayer) {
+        map.removeLayer(currentTileLayer);
+      }
+      currentTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: '',
+        maxZoom: 19
+      }).addTo(map);
+    } else {
+      if (currentTileLayer) {
+        map.removeLayer(currentTileLayer);
+      }
+      currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '',
+        maxZoom: 19
+      }).addTo(map);
+    }
+  }
+
+  // Обновление всех popup
+  function updateAllPopups() {
+    userMarkers.forEach(marker => {
+      if (marker._popup && marker._popup._content) {
+        const content = marker._popup._content;
+        marker.bindPopup(content);
+      }
+    });
+  }
+
+  // Режим добавления новой метки
+  function startAddMarkerMode() {
+    alert('Кликните на карте, чтобы добавить метку');
+    map.on('click', handleMapClickForNewMarker);
+  }
+
+  // Обработчик клика по карте для новой метки
+  function handleMapClickForNewMarker(e) {
+    if (newMarker) {
+      map.removeLayer(newMarker);
+    }
+
+    newMarker = L.marker(e.latlng, {
+      icon: L.divIcon({
+        className: 'temp-marker',
+        html: '📍',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30]
+      })
+    }).addTo(map);
+
+    document.getElementById('marker-lat').value = e.latlng.lat.toFixed(6);
+    document.getElementById('marker-lng').value = e.latlng.lng.toFixed(6);
+    document.getElementById('add-marker-modal').style.display = 'block';
+
+    map.off('click', handleMapClickForNewMarker);
+  }
+
   // Функция для загрузки данных
   function loadData() {
-    const url = API_URL + '?t=' + new Date().getTime(); // Добавляем timestamp против кеширования
+    const url = API_URL + '?t=' + new Date().getTime();
 
     fetch(url)
       .then(response => {
@@ -508,7 +664,7 @@
           lng: lng,
           status: status,
           description: description,
-          photoUrl: '' // Пока без фото для простоты
+          photoUrl: ''
         })
       });
 
@@ -517,8 +673,6 @@
       if (result.success) {
         alert('Метка успешно добавлена!');
         closeAddMarkerModal();
-
-        // Обновляем карту через 2 секунды
         setTimeout(loadData, 2000);
       } else {
         throw new Error(result.error);
@@ -527,6 +681,17 @@
     } catch (error) {
       console.error('Ошибка:', error);
       alert('Ошибка при сохранении: ' + error.message);
+    }
+  }
+
+  function closeAddMarkerModal() {
+    document.getElementById('add-marker-modal').style.display = 'none';
+    document.getElementById('add-marker-form').reset();
+    document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('selected'));
+
+    if (newMarker) {
+      map.removeLayer(newMarker);
+      newMarker = null;
     }
   }
 
@@ -547,7 +712,30 @@
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
   }
 
-  // Остальной код (initMap, addStaticMarkers и т.д.) остается без изменений
+  // Добавляем легенду
+  function addLegend() {
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function(map) {
+      var div = L.DomUtil.create('div', 'info legend');
+      div.style.padding = '10px';
+      div.style.borderRadius = '5px';
+      div.innerHTML = `
+        <h4 style="margin: 0 0 10px 0;">Маркеры:</h4>
+        <div><span style="color: green;">●</span> Полностью доступно(М4)</div>
+        <div><span style="color: lightgreen;">●</span> Доступно(М3)</div>
+        <div><span style="color: gold;">●</span> Частично доступно(М2)</div>
+        <div><span style="color: orange;">●</span> Труднодоступно(М1)</div>
+        <div><span style="color: red;">●</span> Недоступно</div>
+      `;
+      return div;
+    };
+    legend.addTo(map);
+  }
+
+  // Инициализация при загрузке
+  document.addEventListener('DOMContentLoaded', function() {
+    initMap();
+  });
 </script>
 </body>
 </html>
