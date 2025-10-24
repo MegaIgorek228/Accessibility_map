@@ -353,7 +353,6 @@
 
   // Хранилище всех маркеров
   let allMarkers = {
-    static: [],
     dynamic: []
   };
 
@@ -405,8 +404,6 @@
       maxZoom: 19
     }).addTo(map);
 
-    // Добавляем статические маркеры
-    addStaticMarkers();
     addLegend();
 
     // Загружаем данные
@@ -503,13 +500,6 @@
   // Функция фильтрации маркеров по доступности
   function filterMarkersByAccessibility(filterValue) {
     // Сначала показываем все маркеры
-    allMarkers.static.forEach(marker => {
-      if (map.hasLayer(marker)) {
-        map.removeLayer(marker);
-      }
-      map.addLayer(marker);
-    });
-
     allMarkers.dynamic.forEach(marker => {
       if (map.hasLayer(marker)) {
         map.removeLayer(marker);
@@ -544,15 +534,6 @@
     }
 
     // Скрываем маркеры, которые не соответствуют выбранной категории
-    allMarkers.static.forEach(marker => {
-      const popupContent = marker.getPopup().getContent();
-      const status = getStatusFromPopup(popupContent);
-
-      if (categoriesToHide.includes(status)) {
-        map.removeLayer(marker);
-      }
-    });
-
     allMarkers.dynamic.forEach(marker => {
       const popupContent = marker.getPopup().getContent();
       const status = getStatusFromPopup(popupContent);
@@ -766,199 +747,6 @@
       .replace(/\n/g, '<br>');
   }
 
-  // Добавляем статические маркеры
-  function addStaticMarkers() {
-    // Очищаем массив статических маркеров
-    allMarkers.static = [];
-
-    // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker1 = L.marker([55.810901, 37.498832], {icon: icons['Полностью доступно(М4)']}).addTo(map);            // 2
-    gmarker1.bindPopup(`
-            <b>Дворец культуры маи</b><br>
-            Статус: <span style="color: green;">Полностью доступно(М4)</span><br>
-            • Пандус: не требуется<br>
-            • Лифт: есть<br>
-            • Двери: широкие<br>
-            <img src="img/castle_of_culture.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(gmarker1);
-
-    // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker2 = L.marker([55.811605, 37.499038], {icon: icons['Полностью доступно(М4)']}).addTo(map);            // 3
-    gmarker2.bindPopup(`
-            <b>КПП 3</b><br>
-            Статус: <span style="color: green;">Полностью доступно(М4)</span><br>
-            • Пандус: не требуется<br>
-            • Двери: обычные<br>
-            <img src="img/kpp№3.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(gmarker2);
-
-    // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker3 = L.marker([55.811325, 37.498176], {icon: icons['Полностью доступно(М4)']}).addTo(map);            // 4
-    gmarker3.bindPopup(`
-            <b>Пешеходный переход</b><br>
-            Статус: <span style="color: green;">Полностью доступно(М4)</span><br>
-            • Светофор: нет<br>
-            • Автомобили: мало<br>
-            • Дорога: ровная<br>
-            <img src="img/perehod.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(gmarker3);
-
-    // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker4 = L.marker([55.810180, 37.497782], {icon: icons['Полностью доступно(М4)']}).addTo(map);            // 5
-    gmarker4.bindPopup(`
-            <b>Су-27</b><br>
-            Статус: <span style="color: green;">Полностью доступно(М4)</span><br>
-            • Памятник: да<br>
-            • Красивый: да<br>
-            • Летает: нет(<br>
-            <img src="img/Cu-27.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(gmarker4);
-
-    // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker5 = L.marker([55.810509, 37.497620], {icon: icons['Полностью доступно(М4)']}).addTo(map);            // 6
-    gmarker5.bindPopup(`
-            <b>Дубосекская улица(южная часть)</b><br>
-            Статус: <span style="color: green;">Полностью доступно(М4)</span><br>
-            • Свободность: полностью свободно<br>
-            • Красивая: да<br>
-            • Чистота: очень чистая<br>
-            • Асфальт: очень ровный<br>
-            • Качели и скамейки: есть<br>
-            <img src="img/Dubosekskaya.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(gmarker5);
-
-    // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker6 = L.marker([55.812260, 37.498794], {icon: icons['Полностью доступно(М4)']}).addTo(map);            // 7
-    gmarker6.bindPopup(`
-            <b>Дубосекская улица(центральная часть)</b><br>
-            Статус: <span style="color: green;">Полностью доступно(М4)</span><br>
-            • Свободность: полностью свободно<br>
-            • Красивая: да<br>
-            • Чистота: очень чистая<br>
-            • Асфальт: очень ровный<br>
-            <img src="img/Dubo(centr).png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(gmarker6);
-
-    // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker7 = L.marker([55.813939, 37.498210], {icon: icons['Полностью доступно(М4)']}).addTo(map);            // 8
-    gmarker7.bindPopup(`
-            <b>Улица Константина Царева</b><br>
-            Статус: <span style="color: green;">Полностью доступно(М4)</span><br>
-            • Свободность: полностью свободно<br>
-            • Красивая: да<br>
-            • Чистота: очень чистая<br>
-            • Асфальт: очень ровный<br>
-            • Пешеходный переход: есть<br>
-            <img src="img/Konstantin_carev_street.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(gmarker7);
-
-    // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker8 = L.marker([55.813097, 37.501778], {icon: icons['Полностью доступно(М4)']}).addTo(map);           // 9
-    gmarker8.bindPopup(`
-            <b>Детский технопарк "Траектория взлёта"</b><br>
-            Статус: <span style="color: green;">Полностью доступно(М4)</span><br>
-            • Пандус: нет<br>
-            • Двери: широкие<br>
-            • Лестница: широкая(2 ступеньки)<br>
-            <img src="img/child_technopark.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(gmarker8);
-
-    // ЗЕЛЕНЫЙ - полностью доступно
-    var gmarker9 = L.marker([55.812596, 37.502458], {icon: icons['Полностью доступно(М4)']}).addTo(map);           // 9
-    gmarker9.bindPopup(`
-            <b>Пешеходный переход</b><br>
-            Статус: <span style="color: green;">Полностью доступно(М4)</span><br>
-            • Асфальт: ровный<br>
-            • Машины: средне количество(пропускают пешеходов)<br>
-            • Ступеньки: нет<br>
-            • Шумно: да(Ленинградское шосссе)<br>
-            <img src="img/child_technopark.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(gmarker9);
-
-    // Желтый - частично доступно
-    var ymarker1 = L.marker([55.811411, 37.498942], {icon: icons['Частично доступно(М2)']}).addTo(map);           //
-    ymarker1.bindPopup(`
-            <b>Проход</b><br>
-            Статус: <span style="color: orange;">Частично доступно(М2)</span><br>
-            • Двери: нет<br>
-            • Дорога: средне<br>
-            <img src="img/near_3kpp.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(ymarker1);
-
-    // Желтый - частично доступно
-    var ymarker2 = L.marker([55.813972, 37.499214], {icon: icons['Частично доступно(М2)']}).addTo(map);           // 6
-    ymarker2.bindPopup(`
-            <b>4ый институт</b><br>
-            Статус: <span style="color: orange;">Частично доступно(М2)</span><br>
-            • Двери: обычные<br>
-            • Лестница: широкая<br>
-            • Пандус: узкий<br>
-            <img src="img/4_institut.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(ymarker2);
-
-    var ymarker3 = L.marker([55.814120, 37.500530], {icon: icons['Частично доступно(М2)']}).addTo(map);           // 5
-    ymarker3.bindPopup(`
-            <b>6ой институт</b><br>
-            Статус: <span style="color: orange;">Частично доступно(М2)</span><br>
-            • Пандус: нет<br>
-            • Двери: широкие<br>
-            • Лестница: широкая<br>
-            • Перила: есть<br>
-            <img src="img/6_institut.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(ymarker3);
-
-    var ymarker4 = L.marker([55.812382, 37.502448], {icon: icons['Частично доступно(М2)']}).addTo(map);           // 5
-    ymarker4.bindPopup(`
-            <b>4ый кпп</b><br>
-            Статус: <span style="color: orange;">Частично доступно(М2)</span><br>
-            • Пандус: нет<br>
-            • Двери: обычные<br>
-            • Лестница: низкая, широкая<br>
-            • Перила: нет<br>
-            • Шлагбаум: есть<br>
-            <img src="img/kpp4.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(ymarker4);
-
-    var ymarker5 = L.marker([55.810476, 37.498286], {icon: icons['Частично доступно(М2)']}).addTo(map);           // 1
-    ymarker5.bindPopup(`
-            <b>Приемная коммисия маи</b><br>
-            Статус: <span style="color: orange;">Частично доступно(М2)</span><br>
-            • Пандус: нет<br>
-            • Двери: широкие<br>
-            • Лестница: широкая<br>
-            • Перила: есть, удобные<br>
-            <img src="img/priem_comissia.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(ymarker5);
-
-    // КРАСНЫЙ - недоступно
-    var rmarker1 = L.marker([55.814366, 37.501316], {icon: icons['Труднодоступно(М1)']}).addTo(map);                  // 4
-    rmarker1.bindPopup(`
-            <b>Лестница на мост победы</b><br>
-            Статус: <span style="color: red;">Труднодоступно(М1)</span><br>
-            • Пандус: очень крутой и узкий<br>
-            • Ступени: высокие<br>
-            • Лестница: высокая<br>
-            • Перила: неудобные<br>
-            • Светофор: долгий<br>
-            <img src="img/lestniza.png" style="max-width: 200px; max-height: 150px; object-fit: cover;" alt="Фото:">
-        `);
-    allMarkers.static.push(rmarker1);
-  }
-
   // Добавляем легенду
   function addLegend() {
     var legend = L.control({position: 'bottomright'});
@@ -1101,24 +889,13 @@
   // Функция пересоздания всех маркеров
   function recreateAllMarkers() {
     // Удаляем все маркеры с карты
-    allMarkers.static.forEach(marker => {
-      if (map.hasLayer(marker)) {
-        map.removeLayer(marker);
-      }
-    });
-
     allMarkers.dynamic.forEach(marker => {
       if (map.hasLayer(marker)) {
         map.removeLayer(marker);
       }
     });
 
-    // Очищаем массивы маркеров
-    allMarkers.static = [];
     allMarkers.dynamic = [];
-
-    // Заново добавляем статические маркеры
-    addStaticMarkers();
 
     // Заново добавляем динамические маркеры
     loadData();
