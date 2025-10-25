@@ -520,15 +520,15 @@
 
     .info.legend h4 {
       margin: 0 0 16px 0;
-      font-size: 17px;
-      font-weight: 700;
+      font-size: 18px;
+      font-weight: 70;
       color: var(--text-primary);
       letter-spacing: -0.3px;
     }
 
     .info.legend div {
       margin: 8px 0;
-      font-size: 15px;
+      font-size: 16px;
       color: var(--text-secondary);
       display: flex;
       align-items: center;
@@ -631,8 +631,8 @@
     <h3>Тема</h3>
     <div class="theme-switch">
       <label class="switch">
-        <span class="slider"></span>
         <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
       </label>
     </div>
   </div>
@@ -794,7 +794,6 @@
     addLegend();
     loadData();
     initEventListeners();
-    loadTheme();
   }
 
   // Инициализация обработчиков событий
@@ -814,7 +813,6 @@
       document.body.classList.toggle('dark-theme', isDark);
       updateMapTheme(isDark);
     });
-    // запоминание темы
     document.getElementById('theme-toggle').addEventListener('change', function(e) {
       const isDark = e.target.checked;
       document.body.classList.toggle('dark-theme', isDark);
@@ -884,7 +882,8 @@
     });
   }
 
-    // Обновление темы карты
+
+  // Обновление темы карты
   function updateMapTheme(isDark) {
     if (isDark) {
       if (currentTileLayer) {
@@ -904,8 +903,6 @@
       }).addTo(map);
     }
   }
-
-    // запоминание темы
   function loadTheme() {
     const savedTheme = localStorage.getItem('theme');
     const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -1166,6 +1163,7 @@
   // Инициализация при загрузке
   document.addEventListener('DOMContentLoaded', function() {
     initMap();
+    loadTheme();
   });
   function filterMarkersByAccessibility(filterValue) {
     // Определяем, какие иконки использовать для каждого статуса
