@@ -15,7 +15,7 @@
       --bg-secondary: #F2F2F7;
       --bg-tertiary: #E5E5EA;
       --text-primary: #000000;
-      --text-secondary: #8E8E93;
+      --text-secondary: #000000;
       --text-tertiary: #C7C7CC;
       --border-color: #C6C6C8;
       --blur-bg: rgba(255, 255, 255, 0.75);
@@ -533,6 +533,30 @@
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+
+    .dark-theme .leaflet-marker-icon {
+      filter: brightness(0.5) !important;
+    }
+
+    .dark-theme .marker-fully-accessible {
+      filter: brightness(0.3) !important;
+    }
+
+    .dark-theme .marker-accessible {
+      filter: brightness(0.3) !important;
+    }
+
+    .dark-theme .marker-partially-accessible {
+      filter: brightness(0.3) !important;
+    }
+
+    .dark-theme .marker-difficult-access {
+      filter: brightness(0.3) !important;
+    }
+
+    .dark-theme .marker-inaccessible {
+      filter: brightness(0.3) !important;
     }
 
     /* Адаптивность */
