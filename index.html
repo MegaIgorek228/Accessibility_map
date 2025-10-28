@@ -8,635 +8,648 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     /* iOS Design - Inspired by iOS 17-18 */
-    :root {
-      --primary-color: #00C8B3; /* Бирюзовый для светлой темы */
-      --secondary-color: #34C759;
-      --bg-color: #FFFFFF;
-      --bg-secondary: #F2F2F7;
-      --bg-tertiary: #E5E5EA;
-      --text-primary: #000000;
-      --text-secondary: #000000;
-      --text-tertiary: #C7C7CC;
-      --border-color: #C6C6C8;
-      --blur-bg: rgba(255, 255, 255, 0.75);
-      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
-      --font-size: 17px;
-      --border-radius: 16px;
-      --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-      --shadow-large: 0 12px 48px rgba(0, 0, 0, 0.12);
-      --map-brightness: 100%;
-    }
-
-    .dark-theme {
-      --primary-color: #0A84FF; /* Глубокий синий для темной темы */
-      --secondary-color: #30D158;
-      --bg-color: #000000;
-      --bg-secondary: #1C1C1E;
-      --bg-tertiary: #2C2C2E;
-      --text-primary: #FFFFFF;
-      --text-secondary: #98989D;
-      --text-tertiary: #48484A;
-      --border-color: #38383A;
-      --blur-bg: rgba(28, 28, 30, 0.75);
-      --map-brightness: 320%; /* Увеличиваем яркость карты в темной теме */
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: var(--font-family);
-      font-size: var(--font-size);
-      background-color: var(--bg-color);
-      color: var(--text-primary);
-      line-height: 1.4;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    #map {
-      width: 100%;
-      height: 100vh;
-      position: relative;
-      filter: brightness(var(--map-brightness));
-      transition: filter 0.3s ease;
-    }
-
-    /* Кнопка меню */
-    #menu-button {
-      position: absolute;
-      top: 100px; /* Опущена ниже */
-      left: 20px;
-      z-index: 1000;
-      background: var(--blur-bg);
-      backdrop-filter: blur(30px) saturate(180%);
-      -webkit-backdrop-filter: blur(30px) saturate(180%);
-      color: var(--primary-color);
-      border: none;
-      padding: 18px; /* Увеличена на 30% */
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 26px; /* Увеличена на 30% */
-      box-shadow: var(--shadow);
-      width: 68px; /* Увеличена на 30% */
-      height: 68px; /* Увеличена на 30% */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    #menu-button:hover {
-      transform: scale(1.08);
-      background: var(--primary-color);
-      color: white;
-      box-shadow: 0 8px 32px rgba(0, 200, 179, 0.3);
-    }
-
-    .dark-theme #menu-button:hover {
-      box-shadow: 0 8px 32px rgba(10, 132, 255, 0.4);
-    }
-
-    /* Боковое меню с скруглениями */
-    #sidebar {
-      position: fixed;
-      top: 0;
-      left: -100%;
-      width: 340px;
-      height: 100vh;
-      background: var(--blur-bg);
-      backdrop-filter: blur(50px) saturate(200%);
-      -webkit-backdrop-filter: blur(50px) saturate(200%);
-      box-shadow: var(--shadow-large);
-      transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 2000;
-      overflow-y: auto;
-      padding: 0;
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 0 24px 24px 0; /* Скругление правых углов */
-    }
-
-    #sidebar.open {
-      left: 0;
-    }
-
-    .sidebar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 80px 24px 24px;
-      background: linear-gradient(135deg,
-      rgba(0, 200, 179, 0.4) 0%,
-      rgba(0, 200, 179, 0.25) 25%,
-      rgba(0, 200, 179, 0.5) 50%,
-      rgba(0, 200, 179, 0.2) 75%,
-      rgba(0, 200, 179, 0.35) 100%);
-      color: var(--text-primary);
-      margin-bottom: 0;
-      border-radius: 0 24px 0 0;
-    }
-
-    .dark-theme .sidebar-header {
-      background: linear-gradient(135deg,
-      rgba(0, 122, 255, 0.4) 0%,
-      rgba(0, 122, 255, 0.25) 25%,
-      rgba(0, 122, 255, 0.5) 50%,
-      rgba(0, 122, 255, 0.2) 75%,
-      rgba(0, 122, 255, 0.35) 100%);
-    }
-
-    .sidebar-header h2 {
-      font-size: 32px;
-      font-weight: 700;
-      margin: 0;
-      letter-spacing: -0.5px;
-    }
-
-    .close-btn {
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      color: white;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(20px);
-    }
-
-    .close-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.1);
-    }
-
-    .menu-section {
-      margin-bottom: 0;
-      border-bottom: 1px solid var(--border-color);
-      padding: 24px;
-    }
-
-    .menu-section:last-child {
-      border-bottom: none;
-    }
-
-    .menu-section h3 {
-      margin: 0 0 20px 0;
-      color: var(--text-primary);
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-    }
-
-    /* Переключатель темы */
-    .theme-switch {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      justify-content: right;
-      padding: 12px 0;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 54px;
-      height: 32px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--bg-tertiary);
-      transition: .4s;
-      border-radius: 32px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 28px;
-      width: 28px;
-      left: 2px;
-      bottom: 2px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
-    }
-
-    input:checked + .slider {
-      background-color: var(--primary-color);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(22px);
-    }
-
-    /* Селекты и кнопки */
-    select, button.menu-btn {
-      width: 100%;
-      padding: 18px;
-      margin: 10px 0;
-      border: 1.5px solid var(--border-color);
-      border-radius: var(--border-radius);
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      font-family: var(--font-family);
-      font-size: var(--font-size);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
-    }
-
-    select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 7.5L13 1.5' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 20px center;
-      padding-right: 50px;
-    }
-
-    button.menu-btn {
-      width: 100%;
-      padding: 16px;
-      margin: 8px 0;
-      border: none;
-      border-radius: var(--border-radius);
-      background: linear-gradient(135deg,
-      rgba(0, 200, 179, 0.3) 0%,
-      rgba(0, 200, 179, 0.2) 100%);
-      color: var(--text-primary);
-      font-family: var(--font-family);
-      font-size: 17px;
-      font-weight: 600;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
-      letter-spacing: -0.2px;
-      border: 1px solid rgba(0, 200, 179, 0.4);
-    }
-
-    .dark-theme button.menu-btn {
-      background: linear-gradient(135deg,
-      rgba(0, 122, 255, 0.3) 0%,
-      rgba(0, 122, 255, 0.2) 100%);
-      border: 1px solid rgba(0, 122, 255, 0.4);
-      color: white;
-    }
-
-    button.menu-btn:hover {
-      opacity: 0.92;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 200, 179, 0.35);
-    }
-
-    .dark-theme button.menu-btn:hover {
-      box-shadow: 0 8px 24px rgba(10, 132, 255, 0.45);
-    }
-
-    /* Модальное окно - шире и выше */
-    #add-marker-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.45);
-      z-index: 3000;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-
-    .modal-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--bg-color);
-      padding: 0;
-      border-radius: 24px;
-      width: 95%;
-      max-width: 440px; /* Шире */
-      max-height: 85vh; /* Выше */
-      overflow-y: auto;
-      box-shadow: var(--shadow-large);
-    }
-
-    .modal-content h3 {
-      padding: 28px 24px 20px;
-      font-size: 24px;
-      font-weight: 700;
-      text-align: center;
-      background: var(--bg-secondary);
-      margin: 0;
-      letter-spacing: -0.5px;
-    }
-
-    .form-group {
-      margin-bottom: 0;
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .form-group:last-child {
-      border-bottom: none;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 12px;
-      font-weight: 600;
-      font-family: var(--font-family);
-      font-size: 17px;
-      color: var(--text-primary);
-      letter-spacing: -0.2px;
-    }
-
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%;
-      padding: 16px 18px;
-      border: 1.5px solid var(--border-color);
-      border-radius: 14px;
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      font-family: var(--font-family);
-      font-size: 17px;
-      transition: all 0.3s ease;
-    }
-
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      border-color: var(--primary-color);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(0, 200, 179, 0.1);
-    }
-
-    .dark-theme .form-group input:focus,
-    .dark-theme .form-group select:focus,
-    .dark-theme .form-group textarea:focus {
-      box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
-    }
-
-    .form-actions {
-      display: flex;
-      gap: 14px;
-      justify-content: flex-end;
-      padding: 24px;
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border-color);
-    }
-
-    .form-actions button {
-      padding: 14px 28px;
-      border: none;
-      border-radius: 14px;
-      font-weight: 600;
-      font-size: 17px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      min-width: 100px;
-    }
-
-    .form-actions button[type="button"] {
-      background: var(--bg-tertiary);
-      color: var(--text-primary);
-    }
-
-    .form-actions button[type="submit"] {
-      background: var(--primary-color);
-      color: white;
-    }
-
-    /* Опции статуса */
-    .status-option {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin: 10px 0;
-      padding: 16px 18px;
-      border: 1.5px solid var(--border-color);
-      border-radius: 14px;
-      cursor: pointer;
-      font-family: var(--font-family);
-      font-size: 17px;
-      transition: all 0.3s ease;
-      background: var(--bg-secondary);
-    }
-
-    .status-option:hover {
-      border-color: var(--primary-color);
-      background: var(--bg-tertiary);
-      transform: translateY(-1px);
-    }
-
-    .status-option.selected {
-      border-color: var(--primary-color);
-      background: rgba(0, 200, 179, 0.08);
-      box-shadow: 0 2px 8px rgba(0, 200, 179, 0.15);
-    }
-
-    .dark-theme .status-option.selected {
-      background: rgba(10, 132, 255, 0.12);
-      box-shadow: 0 2px 8px rgba(10, 132, 255, 0.2);
-    }
-
-    .status-color {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: 2.5px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Стили для файлового ввода */
-    #choose-photo-btn {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 14px 22px;
-      border-radius: 14px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 16px;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0, 200, 179, 0.25);
-    }
-
-    .dark-theme #choose-photo-btn {
-      box-shadow: 0 2px 8px rgba(10, 132, 255, 0.3);
-    }
-
-    #file-name {
-      color: var(--text-secondary);
-      font-size: 15px;
-      margin-left: 12px;
-    }
-
-    #image-preview {
-      margin-top: 16px;
-      display: none;
-    }
-
-    #preview-img {
-      max-width: 100%;
-      max-height: 220px;
-      border-radius: 14px;
-      border: 1.5px solid var(--border-color);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Легенда карты - эффект жидкого стекла */
-    .info.legend {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(1px) saturate(10%);
-      -webkit-backdrop-filter: blur(40px) saturate(180%);
-      padding: 20px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.52);
-    }
-
-    .dark-theme .info.legend {
-      background: rgba(28, 28, 30, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 8px 32px rgba(100, 100, 100, 0.52);
-    }
-
-    .info.legend h4 {
-      margin: 0 0 16px 0;
-      font-size: 18px;
-      font-weight: 70;
-      color: var(--text-primary);
-      letter-spacing: -0.3px;
-    }
-
-    .info.legend div {
-      margin: 8px 0;
-      font-size: 16px;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .dark-theme .leaflet-marker-icon {
-      filter: brightness(0.5) !important;
-    }
-
-    .dark-theme .marker-fully-accessible {
-      filter: brightness(0.3) !important;
-    }
-
-    .dark-theme .marker-accessible {
-      filter: brightness(0.3) !important;
-    }
-
-    .dark-theme .marker-partially-accessible {
-      filter: brightness(0.3) !important;
-    }
-
-    .dark-theme .marker-difficult-access {
-      filter: brightness(0.3) !important;
-    }
-
-    .dark-theme .marker-inaccessible {
-      filter: brightness(0.3) !important;
-    }
-
-    /* Адаптивность */
-    @media (max-width: 768px) {
-      #sidebar {
-        width: 88%;
-        left: -88%;
-        border-radius: 0 28px 28px 0;
-      }
-
-      .modal-content {
-        width: 92%;
-        max-width: none;
-        margin: 20px;
-        border-radius: 20px;
-      }
-
-      #menu-button {
-        top: 90px;
-        left: 16px;
-        width: 60px;
-        height: 60px;
-        font-size: 24px;
-      }
-    }
-
-    /* Анимации */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px) scale(0.95); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @keyframes slideIn {
-      from { transform: translateX(-100%); }
-      to { transform: translateX(0); }
-    }
-
-    #sidebar.open {
-      animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Скрытие атрибуции Leaflet */
-    .leaflet-control-attribution {
-      display: none !important;
-    }
-
-    /* Стили для popup маркеров */
-    .leaflet-popup-content {
-      font-family: var(--font-family) !important;
-      font-size: 15px !important;
-      border-radius: 16px !important;
-      line-height: 1.5;
-    }
-
-    .leaflet-popup-content-wrapper {
-      border-radius: 16px !important;
-      background: var(--bg-color) !important;
-      color: var(--text-primary) !important;
-      box-shadow: var(--shadow-large) !important;
-      border: 1px solid var(--border-color);
-    }
-
-    /* Кастомный скроллбар */
-    #sidebar::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    #sidebar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    #sidebar::-webkit-scrollbar-thumb {
-      background: var(--text-tertiary);
-      border-radius: 2px;
-    }
-
-    #sidebar::-webkit-scrollbar-thumb:hover {
-      background: var(--text-secondary);
-    }
-  </style>
+  :root {
+  --primary-color: #00C8B3; /* Бирюзовый для светлой темы */
+  --secondary-color: #34C759;
+  --bg-color: #FFFFFF;
+  --bg-secondary: #F2F2F7;
+  --bg-tertiary: #E5E5EA;
+  --text-primary: #000000;
+  --text-secondary: #000000;
+  --text-tertiary: #C7C7CC;
+  --border-color: #C6C6C8;
+  --blur-bg: rgba(255, 255, 255, 0.75);
+  --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  --font-size: 17px;
+  --border-radius: 16px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-large: 0 12px 48px rgba(0, 0, 0, 0.12);
+  --map-brightness: 100%;
+  --ui-brightness: 100%; /* Новая переменная для UI элементов */
+  }
+
+  .dark-theme {
+  --primary-color: #0A84FF; /* Глубокий синий для темной темы */
+  --secondary-color: #30D158;
+  --bg-color: #000000;
+  --bg-secondary: #1C1C1E;
+  --bg-tertiary: #2C2C2E;
+  --text-primary: #FFFFFF;
+  --text-secondary: #98989D;
+  --text-tertiary: #48484A;
+  --border-color: #38383A;
+  --blur-bg: rgba(28, 28, 30, 0.75);
+  --map-brightness: 320%; /* Увеличиваем яркость карты в темной теме */
+  --ui-brightness: 31%; /* Уменьшаем яркость UI элементов для компенсации */
+  }
+
+  * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+
+  body {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  }
+
+  #map {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  filter: brightness(var(--map-brightness));
+  transition: filter 0.3s ease;
+  }
+
+  /* Затемнение всех UI элементов в темной теме */
+  /*.dark-theme #menu-button,*/
+  /*.dark-theme #sidebar,*/
+  /*.dark-theme .modal-content,*/
+  .dark-theme .info.legend,
+  .dark-theme .leaflet-popup-content-wrapper,
+  .dark-theme .leaflet-control-zoom,
+  .dark-theme .leaflet-control-layers {
+  filter: brightness(var(--ui-brightness));
+  }
+
+  /* Кнопка меню */
+  #menu-button {
+  position: absolute;
+  top: 100px; /* Опущена ниже */
+  left: 20px;
+  z-index: 1000;
+  background: var(--blur-bg);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  color: var(--primary-color);
+  border: none;
+  padding: 18px; /* Увеличена на 30% */
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 26px; /* Увеличена на 30% */
+  box-shadow: var(--shadow);
+  width: 68px; /* Увеличена на 30% */
+  height: 68px; /* Увеличена на 30% */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  #menu-button:hover {
+  transform: scale(1.08);
+  background: var(--primary-color);
+  color: white;
+  box-shadow: 0 8px 32px rgba(0, 200, 179, 0.3);
+  }
+
+  .dark-theme #menu-button:hover {
+  box-shadow: 0 8px 32px rgba(10, 132, 255, 0.4);
+  }
+
+  /* Боковое меню с скруглениями */
+  #sidebar {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 340px;
+  height: 100vh;
+  background: var(--blur-bg);
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+  box-shadow: var(--shadow-large);
+  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2000;
+  overflow-y: auto;
+  padding: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 24px 24px 0; /* Скругление правых углов */
+  }
+
+  #sidebar.open {
+  left: 0;
+  }
+
+  .sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 80px 24px 24px;
+  background: linear-gradient(135deg,
+  rgba(0, 200, 179, 0.4) 0%,
+  rgba(0, 200, 179, 0.25) 25%,
+  rgba(0, 200, 179, 0.5) 50%,
+  rgba(0, 200, 179, 0.2) 75%,
+  rgba(0, 200, 179, 0.35) 100%);
+  color: var(--text-primary);
+  margin-bottom: 0;
+  border-radius: 0 24px 0 0;
+  }
+
+  .dark-theme .sidebar-header {
+  background: linear-gradient(135deg,
+  rgba(0, 122, 255, 0.4) 0%,
+  rgba(0, 122, 255, 0.25) 25%,
+  rgba(0, 122, 255, 0.5) 50%,
+  rgba(0, 122, 255, 0.2) 75%,
+  rgba(0, 122, 255, 0.35) 100%);
+  }
+
+  .sidebar-header h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.5px;
+  }
+
+  .close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(20px);
+  }
+
+  .close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+  }
+
+  .menu-section {
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--border-color);
+  padding: 24px;
+  }
+
+  .menu-section:last-child {
+  border-bottom: none;
+  }
+
+  .menu-section h3 {
+  margin: 0 0 20px 0;
+  color: var(--text-primary);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  }
+
+  /* Переключатель темы */
+  .theme-switch {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: right;
+  padding: 12px 0;
+  }
+
+  .switch {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 32px;
+  }
+
+  .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  }
+
+  .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-tertiary);
+  transition: .4s;
+  border-radius: 32px;
+  }
+
+  .slider:before {
+  position: absolute;
+  content: "";
+  height: 28px;
+  width: 28px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  }
+
+  input:checked + .slider {
+  background-color: var(--primary-color);
+  }
+
+  input:checked + .slider:before {
+  transform: translateX(22px);
+  }
+
+  /* Селекты и кнопки */
+  select, button.menu-btn {
+  width: 100%;
+  padding: 18px;
+  margin: 10px 0;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  }
+
+  select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 7.5L13 1.5' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  padding-right: 50px;
+  }
+
+  button.menu-btn {
+  width: 100%;
+  padding: 16px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--border-radius);
+  background: linear-gradient(135deg,
+  rgba(0, 200, 179, 0.3) 0%,
+  rgba(0, 200, 179, 0.2) 100%);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 17px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  letter-spacing: -0.2px;
+  border: 1px solid rgba(0, 200, 179, 0.4);
+  }
+
+  .dark-theme button.menu-btn {
+  background: linear-gradient(135deg,
+  rgba(0, 122, 255, 0.3) 0%,
+  rgba(0, 122, 255, 0.2) 100%);
+  border: 1px solid rgba(0, 122, 255, 0.4);
+  color: white;
+  }
+
+  button.menu-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 200, 179, 0.35);
+  }
+
+  .dark-theme button.menu-btn:hover {
+  box-shadow: 0 8px 24px rgba(10, 132, 255, 0.45);
+  }
+
+  /* Модальное окно - шире и выше */
+  #add-marker-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 3000;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  }
+
+  .modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg-color);
+  padding: 0;
+  border-radius: 24px;
+  width: 95%;
+  max-width: 440px; /* Шире */
+  max-height: 85vh; /* Выше */
+  overflow-y: auto;
+  box-shadow: var(--shadow-large);
+  }
+
+  .modal-content h3 {
+  padding: 28px 24px 20px;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  background: var(--bg-secondary);
+  margin: 0;
+  letter-spacing: -0.5px;
+  }
+
+  .form-group {
+  margin-bottom: 0;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  }
+
+  .form-group:last-child {
+  border-bottom: none;
+  }
+
+  .form-group label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  font-size: 17px;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+  }
+
+  .form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 16px 18px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 14px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 17px;
+  transition: all 0.3s ease;
+  }
+
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 200, 179, 0.1);
+  }
+
+  .dark-theme .form-group input:focus,
+  .dark-theme .form-group select:focus,
+  .dark-theme .form-group textarea:focus {
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
+  }
+
+  .form-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-end;
+  padding: 24px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  }
+
+  .form-actions button {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 100px;
+  }
+
+  .form-actions button[type="button"] {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  }
+
+  .form-actions button[type="submit"] {
+  background: var(--primary-color);
+  color: white;
+  }
+
+  /* Опции статуса */
+  .status-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 10px 0;
+  padding: 16px 18px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 17px;
+  transition: all 0.3s ease;
+  background: var(--bg-secondary);
+  }
+
+  .status-option:hover {
+  border-color: var(--primary-color);
+  background: var(--bg-tertiary);
+  transform: translateY(-1px);
+  }
+
+  .status-option.selected {
+  border-color: var(--primary-color);
+  background: rgba(0, 200, 179, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 200, 179, 0.15);
+  }
+
+  .dark-theme .status-option.selected {
+  background: rgba(10, 132, 255, 0.12);
+  box-shadow: 0 2px 8px rgba(10, 132, 255, 0.2);
+  }
+
+  .status-color {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Стили для файлового ввода */
+  #choose-photo-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 200, 179, 0.25);
+  }
+
+  .dark-theme #choose-photo-btn {
+  box-shadow: 0 2px 8px rgba(10, 132, 255, 0.3);
+  }
+
+  #file-name {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-left: 12px;
+  }
+
+  #image-preview {
+  margin-top: 16px;
+  display: none;
+  }
+
+  #preview-img {
+  max-width: 100%;
+  max-height: 220px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Легенда карты - эффект жидкого стекла */
+  .info.legend {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(1px) saturate(10%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.52);
+  }
+
+  .dark-theme .info.legend {
+  background: rgba(28, 28, 30, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(100, 100, 100, 0.52);
+  }
+
+  .info.legend h4 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 70;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  }
+
+  .info.legend div {
+  margin: 8px 0;
+  font-size: 16px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  }
+
+  /* Затемнение маркеров в темной теме */
+  .dark-theme .leaflet-marker-icon {
+  filter: brightness(0.5) !important;
+  }
+
+  .dark-theme .marker-fully-accessible {
+  filter: brightness(0.3) !important;
+  }
+
+  .dark-theme .marker-accessible {
+  filter: brightness(0.3) !important;
+  }
+
+  .dark-theme .marker-partially-accessible {
+  filter: brightness(0.3) !important;
+  }
+
+  .dark-theme .marker-difficult-access {
+  filter: brightness(0.3) !important;
+  }
+
+  .dark-theme .marker-inaccessible {
+  filter: brightness(0.3) !important;
+  }
+
+  /* Адаптивность */
+  @media (max-width: 768px) {
+  #sidebar {
+  width: 88%;
+  left: -88%;
+  border-radius: 0 28px 28px 0;
+  }
+
+  .modal-content {
+  width: 92%;
+  max-width: none;
+  margin: 20px;
+  border-radius: 20px;
+  }
+
+  #menu-button {
+  top: 90px;
+  left: 16px;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  }
+  }
+
+  /* Анимации */
+  @keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+  }
+
+  #sidebar.open {
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Скрытие атрибуции Leaflet */
+  .leaflet-control-attribution {
+  display: none !important;
+  }
+
+  /* Стили для popup маркеров */
+  .leaflet-popup-content {
+  font-family: var(--font-family) !important;
+  font-size: 15px !important;
+  border-radius: 16px !important;
+  line-height: 1.5;
+  }
+
+  .leaflet-popup-content-wrapper {
+  border-radius: 16px !important;
+  background: var(--bg-color) !important;
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow-large) !important;
+  border: 1px solid var(--border-color);
+  }
+
+  /* Кастомный скроллбар */
+  #sidebar::-webkit-scrollbar {
+  width: 4px;
+  }
+
+  #sidebar::-webkit-scrollbar-track {
+  background: transparent;
+  }
+
+  #sidebar::-webkit-scrollbar-thumb {
+  background: var(--text-tertiary);
+  border-radius: 2px;
+  }
+
+  #sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+  }</style>
 </head>
 <body>
 <div id="map"></div>
