@@ -21,7 +21,7 @@
   --blur-bg: rgba(255, 255, 255, 0.75);
   --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
   --font-size: 17px;
-  --border-radius: 16px;
+  --border-radius: 25px;
   --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   --shadow-large: 0 12px 48px rgba(0, 0, 0, 0.12);
   --map-brightness: 100%;
@@ -29,8 +29,8 @@
   }
 
   .dark-theme {
-  --primary-color: #0A84FF; /* Глубокий синий для темной темы */
-  --secondary-color: #30D158;
+  --primary-color: #00b061; /* Глубокий синий для темной темы */
+  --secondary-color: #00FF89;
   --bg-color: #000000;
   --bg-secondary: #1C1C1E;
   --bg-tertiary: #2C2C2E;
@@ -39,8 +39,8 @@
   --text-tertiary: #48484A;
   --border-color: #38383A;
   --blur-bg: rgba(28, 28, 30, 0.75);
-  --map-brightness: 320%; /* Увеличиваем яркость карты в темной теме */
-  --ui-brightness: 31%; /* Уменьшаем яркость UI элементов для компенсации */
+  --map-brightness: 100%; /* яркость карты в темной теме */
+  --ui-brightness: 100%; /* яркость UI элементов */
   }
 
   * {
@@ -71,9 +71,14 @@
   /*.dark-theme #menu-button,*/
   /*.dark-theme #sidebar,*/
   /*.dark-theme .modal-content,*/
-  .dark-theme .info.legend,
-  .dark-theme .leaflet-popup-content-wrapper,
+  /*   - filter blue -> red*/
   .dark-theme .leaflet-control-zoom,
+  .dark-theme .leaflet-layer,
+  .dark-theme .leaflet-control-zoom-in,
+  .dark-theme .leaflet-control-zoom-out,
+  .dark-theme .leaflet-control-attribution {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  }
   .dark-theme .leaflet-control-layers {
   filter: brightness(var(--ui-brightness));
   }
@@ -81,7 +86,7 @@
   /* Кнопка меню */
   #menu-button {
   position: absolute;
-  top: 100px; /* Опущена ниже */
+  top: 100px;
   left: 20px;
   z-index: 1000;
   background: var(--blur-bg);
@@ -89,13 +94,13 @@
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   color: var(--primary-color);
   border: none;
-  padding: 18px; /* Увеличена на 30% */
-  border-radius: 50%;
+  padding: 18px;
+  border-radius: 52%;
   cursor: pointer;
-  font-size: 26px; /* Увеличена на 30% */
+  font-size: 26px;
   box-shadow: var(--shadow);
-  width: 68px; /* Увеличена на 30% */
-  height: 68px; /* Увеличена на 30% */
+  width: 68px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,7 +116,7 @@
   }
 
   .dark-theme #menu-button:hover {
-  box-shadow: 0 8px 32px rgba(10, 132, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 200, 179, 0.3);
   }
 
   /* Боковое меню с скруглениями */
@@ -155,11 +160,11 @@
 
   .dark-theme .sidebar-header {
   background: linear-gradient(135deg,
-  rgba(0, 122, 255, 0.4) 0%,
-  rgba(0, 122, 255, 0.25) 25%,
-  rgba(0, 122, 255, 0.5) 50%,
-  rgba(0, 122, 255, 0.2) 75%,
-  rgba(0, 122, 255, 0.35) 100%);
+  rgba(0, 193, 107, 0.45) 0%,
+  rgba(0, 154, 90, 0.48) 25%,
+  rgba(0, 145, 89, 0.71) 50%,
+  rgba(0, 154, 90, 0.48) 75%,
+  rgba(0, 193, 107, 0.51) 100%);
   }
 
   .sidebar-header h2 {
@@ -290,7 +295,7 @@
   width: 100%;
   padding: 16px;
   margin: 8px 0;
-  border: none;
+  border: 1px solid rgba(0, 180, 204, 0.51);
   border-radius: var(--border-radius);
   background: linear-gradient(135deg,
   rgba(0, 200, 179, 0.3) 0%,
@@ -307,23 +312,23 @@
 
   .dark-theme button.menu-btn {
   background: linear-gradient(135deg,
-  rgba(0, 122, 255, 0.3) 0%,
-  rgba(0, 122, 255, 0.2) 100%);
-  border: 1px solid rgba(0, 122, 255, 0.4);
+  rgba(0, 168, 93, 0.51) 0%,
+  rgba(0, 154, 90, 0.48) 100%);
+  border: 1px solid rgba(0, 193, 107, 0.51);
   color: white;
   }
 
   button.menu-btn:hover {
   opacity: 0.92;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 200, 179, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 200, 108, 0.35);
   }
 
   .dark-theme button.menu-btn:hover {
-  box-shadow: 0 8px 24px rgba(10, 132, 255, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 200, 108, 0.35);
   }
 
-  /* Модальное окно - шире и выше */
+  /* Модальное окно */
   #add-marker-modal {
   display: none;
   position: fixed;
@@ -346,8 +351,8 @@
   padding: 0;
   border-radius: 24px;
   width: 95%;
-  max-width: 440px; /* Шире */
-  max-height: 85vh; /* Выше */
+  max-width: 440px;
+  max-height: 85vh;
   overflow-y: auto;
   box-shadow: var(--shadow-large);
   }
@@ -386,7 +391,7 @@
   width: 100%;
   padding: 16px 18px;
   border: 1.5px solid var(--border-color);
-  border-radius: 14px;
+  border-radius: 25px;
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-family: var(--font-family);
@@ -403,7 +408,7 @@
   .dark-theme .form-group input:focus,
   .dark-theme .form-group select:focus,
   .dark-theme .form-group textarea:focus {
-  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(10, 255, 116, 0.2);
   }
 
   .form-actions {
@@ -417,23 +422,35 @@
 
   .form-actions button {
   padding: 14px 28px;
-  border: none;
-  border-radius: 14px;
+  border-radius: 25px;
   font-weight: 600;
   font-size: 17px;
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 100px;
+  background: linear-gradient(135deg,
+  rgba(0, 200, 179, 0.3) 0%,
+  rgba(0, 200, 179, 0.2) 100%);
+  border: 1px solid rgba(0, 200, 179, 0.4);
+  color: #1c1d22;
   }
 
-  .form-actions button[type="button"] {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
+  .dark-theme .form-actions button {
+    background: linear-gradient(135deg,
+    rgba(0, 168, 93, 0.51) 0%,
+    rgba(0, 154, 90, 0.48) 100%);
+    border: 1px solid rgba(0, 193, 107, 0.51);
+    color: white;
   }
 
-  .form-actions button[type="submit"] {
-  background: var(--primary-color);
-  color: white;
+  .form-actions button:hover {
+    opacity: 0.92;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 200, 108, 0.35);
+  }
+
+  .dark-theme .form-actions button:hover {
+    box-shadow: 0 8px 24px rgba(0, 200, 108, 0.35);
   }
 
   /* Опции статуса */
@@ -444,7 +461,7 @@
   margin: 10px 0;
   padding: 16px 18px;
   border: 1.5px solid var(--border-color);
-  border-radius: 14px;
+  border-radius: 25px;
   cursor: pointer;
   font-family: var(--font-family);
   font-size: 17px;
@@ -465,8 +482,8 @@
   }
 
   .dark-theme .status-option.selected {
-  background: rgba(10, 132, 255, 0.12);
-  box-shadow: 0 2px 8px rgba(10, 132, 255, 0.2);
+  background: rgba(10, 255, 108, 0.12);
+  box-shadow: 0 2px 8px rgba(10, 255, 108, 0.2);
   }
 
   .status-color {
@@ -479,20 +496,39 @@
 
   /* Стили для файлового ввода */
   #choose-photo-btn {
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 14px 22px;
-  border-radius: 14px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 200, 179, 0.25);
+    background: linear-gradient(135deg,
+    rgba(0, 200, 179, 0.3) 0%,
+    rgba(0, 200, 179, 0.2) 100%);
+    color: var(--text-primary);
+    border: 1px solid rgba(0, 200, 179, 0.4);
+    padding: 14px 22px;
+    border-radius: 25px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: var(--font-family);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: -0.2px;
   }
 
   .dark-theme #choose-photo-btn {
-  box-shadow: 0 2px 8px rgba(10, 132, 255, 0.3);
+    background: linear-gradient(135deg,
+    rgba(0, 168, 93, 0.51) 0%,
+    rgba(0, 154, 90, 0.48) 100%);
+    border: 1px solid rgba(0, 193, 107, 0.51);
+    color: white;
+  }
+
+  #choose-photo-btn:hover {
+    opacity: 0.92;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 200, 108, 0.35);
+  }
+
+  .dark-theme #choose-photo-btn:hover {
+    box-shadow: 0 8px 24px rgba(0, 200, 108, 0.35);
   }
 
   #file-name {
@@ -509,18 +545,18 @@
   #preview-img {
   max-width: 100%;
   max-height: 220px;
-  border-radius: 14px;
+  border-radius: 25px;
   border: 1.5px solid var(--border-color);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  /* Легенда карты - эффект жидкого стекла */
+  /* Легенда карты */
   .info.legend {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(1px) saturate(10%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   padding: 20px;
-  border-radius: 20px;
+  border-radius: 25px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.52);
   }
@@ -548,31 +584,6 @@
   gap: 10px;
   }
 
-  /* Затемнение маркеров в темной теме */
-  .dark-theme .leaflet-marker-icon {
-  filter: brightness(0.5) !important;
-  }
-
-  .dark-theme .marker-fully-accessible {
-  filter: brightness(0.3) !important;
-  }
-
-  .dark-theme .marker-accessible {
-  filter: brightness(0.3) !important;
-  }
-
-  .dark-theme .marker-partially-accessible {
-  filter: brightness(0.3) !important;
-  }
-
-  .dark-theme .marker-difficult-access {
-  filter: brightness(0.3) !important;
-  }
-
-  .dark-theme .marker-inaccessible {
-  filter: brightness(0.3) !important;
-  }
-
   /* Адаптивность */
   @media (max-width: 768px) {
   #sidebar {
@@ -585,7 +596,7 @@
   width: 92%;
   max-width: none;
   margin: 20px;
-  border-radius: 20px;
+  border-radius: 25px;
   }
 
   #menu-button {
@@ -762,7 +773,7 @@
       <label>Фото:</label>
       <input type="file" id="marker-photo-file" accept="image/*" style="display: none;">
       <div style="display: flex; gap: 10px; align-items: center;">
-        <button type="button" id="choose-photo-btn" style="background: var(--primary-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+        <button type="button" id="choose-photo-btn">
           Выбрать файл
         </button>
         <span id="file-name" style="color: var(--text-color);">Файл не выбран</span>
@@ -786,6 +797,7 @@
   let newMarker = null;
   let currentTileLayer = null;
   let selectedFile = null;
+
 
   // ЕДИНЫЙ URL для всего!
   const API_URL = 'https://script.google.com/macros/s/AKfycby7n0Nh1zmD6gYWyoYEd6JuDMetX_Ky1FFIkIBfZrVsbkkQasIbd7bhLAtjHWd5qoa5xw/exec';
@@ -848,13 +860,6 @@
     document.getElementById('theme-toggle').addEventListener('change', function(e) {
       const isDark = e.target.checked;
       document.body.classList.toggle('dark-theme', isDark);
-      updateMapTheme(isDark);
-    });
-    document.getElementById('theme-toggle').addEventListener('change', function(e) {
-      const isDark = e.target.checked;
-      document.body.classList.toggle('dark-theme', isDark);
-      updateMapTheme(isDark);
-      saveTheme(isDark);
     });
 
     // Смена шрифта
@@ -920,38 +925,18 @@
   }
 
 
-  // Обновление темы карты
-  function updateMapTheme(isDark) {
-    if (isDark) {
-      if (currentTileLayer) {
-        map.removeLayer(currentTileLayer);
-      }
-      currentTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-        attribution: '',
-        maxZoom: 19
-      }).addTo(map);
-    } else {
-      if (currentTileLayer) {
-        map.removeLayer(currentTileLayer);
-      }
-      currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '',
-        maxZoom: 19
-      }).addTo(map);
-    }
-  }
   function loadTheme() {
+    // Принудительно устанавливаем светлую тему
+    localStorage.setItem('theme', 'light');
+
     const savedTheme = localStorage.getItem('theme');
-    const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const isDark = savedTheme === 'dark';
 
     document.body.classList.toggle('dark-theme', isDark);
     document.getElementById('theme-toggle').checked = isDark;
-    updateMapTheme(isDark);
   }
 
-  function saveTheme(isDark) {
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  }
+
 
   // Обновление всех popup
   function updateAllPopups() {
@@ -987,6 +972,9 @@
     document.getElementById('marker-lat').value = e.latlng.lat.toFixed(6);
     document.getElementById('marker-lng').value = e.latlng.lng.toFixed(6);
     document.getElementById('add-marker-modal').style.display = 'block';
+
+    const modalContent = document.querySelector('.modal-content');
+    modalContent.scrollTop = 0;
 
     map.off('click', handleMapClickForNewMarker);
   }
@@ -1182,8 +1170,6 @@
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function(map) {
       var div = L.DomUtil.create('div', 'info legend');
-      div.style.padding = '10px';
-      div.style.borderRadius = '5px';
       div.innerHTML = `
         <h4 style="margin: 0 0 10px 0;">Маркеры:</h4>
         <div><span style="color: green;">●</span> Полностью доступно(М4)</div>
