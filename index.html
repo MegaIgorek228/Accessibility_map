@@ -216,7 +216,7 @@
   /* Переключатель темы */
   .theme-switch {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
   justify-content: right;
   padding: 12px 0;
@@ -266,6 +266,61 @@
 
   input:checked + .slider:before {
   transform: translateX(22px);
+  }
+
+    /* Стили для заголовка доступности с кнопкой помощи */
+    .accessibility-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .accessibility-header select {
+      flex: 1;
+      margin: 0;
+    }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 0 0 0 0;
+  }
+    /* Кнопка помощи в меню */
+  .help-btn {
+    background: var(--blur-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    color: #000000;
+    border: 1px rgba(255, 255, 255, 0.75);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+  }
+
+  .help-btn:hover {
+    transform: scale(1.08);
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+
+  .dark-theme .help-btn {
+    color: #ffffff;
+    background: var(--bg-secondary);
+  }
+
+  .dark-theme .help-btn:hover {
+    background: var(--primary-color);
+    color: white;
   }
 
   /* Селекты и кнопки */
@@ -326,6 +381,85 @@
 
   .dark-theme button.menu-btn:hover {
   box-shadow: 0 8px 24px rgba(0, 200, 108, 0.35);
+  }
+
+  /* Модальное окно помощи */
+  #help-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 3000;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  #help-modal .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-color);
+    padding: 0;
+    border-radius: 24px;
+    width: 95%;
+    max-width: 500px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-large);
+  }
+
+  #help-modal .modal-content h3 {
+    padding: 28px 24px 20px;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    background: var(--bg-secondary);
+    margin: 0;
+    letter-spacing: -0.5px;
+    border-radius: 24px 24px 0 0;
+  }
+
+  #help-modal .form-group {
+    margin-bottom: 0;
+    padding: 20px 24px;
+  }
+
+  #help-modal .form-group h4 {
+    margin: 15px 0 10px 0;
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  #help-modal .form-group p {
+    margin: 10px 0;
+    line-height: 1.5;
+    color: var(--text-primary);
+  }
+
+  #help-modal .form-group ul {
+    margin: 10px 0;
+    padding-left: 20px;
+  }
+
+  #help-modal .form-group li {
+    margin: 5px 0;
+    line-height: 1.4;
+    color: var(--text-primary);
+  }
+
+  #help-modal .form-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: flex-end;
+    padding: 20px 24px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    border-radius: 0 0 24px 24px;
   }
 
   /* Модальное окно */
@@ -606,6 +740,16 @@
   height: 60px;
   font-size: 24px;
   }
+
+  .accessibility-header {
+    gap: 8px;
+  }
+
+  .help-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
   }
 
   /* Анимации */
@@ -676,17 +820,21 @@
   </div>
 
   <div class="menu-section">
-    <h3>Тема</h3>
-    <div class="theme-switch">
-      <label class="switch">
-        <input type="checkbox" id="theme-toggle">
-        <span class="slider"></span>
-      </label>
+    <div class="section-header">
+      <h3>Тема</h3>
+      <div class="theme-switch">
+        <label class="switch">
+          <input type="checkbox" id="theme-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
   </div>
 
   <div class="menu-section">
-    <h3>Шрифт</h3>
+    <div class="section-header">
+      <h3>Шрифт</h3>
+    </div>
     <select id="font-family-select">
       <option value="Arial, sans-serif">Arial</option>
       <option value="'Helvetica Neue', sans-serif">Helvetica</option>
@@ -702,12 +850,17 @@
   </div>
 
   <div class="menu-section">
-    <h3>Действия</h3>
+    <div class="section-header">
+      <h3>Действия</h3>
+    </div>
     <button class="menu-btn" id="add-marker-btn">Добавить метку</button>
     <button class="menu-btn" onclick="loadData()">Обновить карту</button>
   </div>
   <div class="menu-section">
-    <h3>Доступность</h3>
+    <div class="section-header">
+      <h3>Доступность</h3>
+      <button id="help-button" class="help-btn">?</button>
+    </div>
     <select id="accessibility-filter">
       <option value="all">Показать все</option>
       <option value="m4">Полностью доступно (М4)</option>
@@ -789,7 +942,43 @@
     </form>
   </div>
 </div>
+<!-- Модальное окно помощи -->
+<div id="help-modal" class="modal">
+  <div class="modal-content">
+    <h3>Помощь по карте доступности</h3>
+    <div class="form-group">
+      <h4>Статусы доступности:</h4>
+      <div style="margin-bottom: 10px;">
+        <div style="display: flex; align-items: center; margin: 5px 0;">
+          <div style="width: 12px; height: 12px; background: green; border-radius: 50%; margin-right: 10px; flex-shrink: 0; margin-top: 3px;"></div>
+          <span>(М4) Инвалиды, передвигающиеся на креслах-колясках</span>
+        </div>
+        <div style="display: flex; align-items: center; margin: 5px 0;">
+          <div style="width: 12px; height: 12px; background: lightgreen; border-radius: 50%; margin-right: 10px; flex-shrink: 0; margin-top: 3px;"></div>
+          <span>(М3) Люди, использующие дополнительные опоры</span>
+        </div>
+        <div style="display: flex; align-items: center; margin: 5px 0;">
+          <div style="width: 12px; height: 12px; background: orange; border-radius: 50%; margin-right: 10px; flex-shrink: 0; margin-top: 3px;"></div>
+          <span>(М2) Родители с детскими колясками</span>
+        </div>
+        <div style="display: flex; align-items: center; margin: 5px 0;">
+          <div style="width: 12px; height: 12px; background: darkorange; border-radius: 50%; margin-right: 10px; flex-shrink: 0; margin-top: 3px;"></div>
+          <span>(М1) Люди со сниженной мобильностью (пожилые люди, пользователи протезов)</span>
+        </div>
+        <div style="display: flex; align-items: center; margin: 5px 0;">
+          <div style="width: 12px; height: 12px; background: red; border-radius: 50%; margin-right: 10px; flex-shrink: 0; margin-top: 3px;"></div>
+          <span>Недоступно - вход невозможен</span>
+        </div>
+      </div>
 
+      <h4>Фильтрация:</h4>
+      <p>Используйте выпадающий список "Доступность" для фильтрации объектов по уровню доступности.</p>
+    </div>
+    <div class="form-actions">
+      <button type="button" id="close-help-modal">Закрыть</button>
+    </div>
+  </div>
+</div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
   // Глобальные переменные
@@ -890,6 +1079,22 @@
         this.classList.add('selected');
         document.getElementById('marker-status').value = this.dataset.status;
       });
+    });
+
+    // Управление модальным окном помощи
+    document.querySelector('.help-btn').addEventListener('click', () => {
+      document.getElementById('help-modal').style.display = 'block';
+    });
+
+    document.getElementById('close-help-modal').addEventListener('click', () => {
+      document.getElementById('help-modal').style.display = 'none';
+    });
+
+// Закрытие модального окна помощи при клике вне его
+    document.getElementById('help-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'help-modal') {
+        document.getElementById('help-modal').style.display = 'none';
+      }
     });
 
     document.getElementById('choose-photo-btn').addEventListener('click', function() {
