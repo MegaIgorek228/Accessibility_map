@@ -986,7 +986,12 @@
   let newMarker = null;
   let currentTileLayer = null;
   let selectedFile = null;
-
+  const forbiddenWords = [
+    'блять', 'блядь', 'хуй', 'пизда', 'ебал', 'ебать',
+    'нахрен', 'нахер', 'похуй', 'пидор',
+    'мудак', 'мудила', 'гандон', 'долбоёб', 'уёбок',
+    'fuck', 'shit', 'asshole', 'bitch', 'хуе', 'хуё'
+  ];
 
   // ЕДИНЫЙ URL для всего!
   const API_URL = 'https://script.google.com/macros/s/AKfycby7n0Nh1zmD6gYWyoYEd6JuDMetX_Ky1FFIkIBfZrVsbkkQasIbd7bhLAtjHWd5qoa5xw/exec';
@@ -1129,7 +1134,6 @@
     });
   }
 
-
   function loadTheme() {
     // Принудительно устанавливаем светлую тему
     localStorage.setItem('theme', 'light');
@@ -1141,9 +1145,7 @@
     document.getElementById('theme-toggle').checked = isDark;
   }
 
-
-
-  // Обновление всех popup
+  // Обновление всех маркеров
   function updateAllPopups() {
     allMarkers.forEach(marker => {
       if (marker._popup && marker._popup._content) {
@@ -1244,6 +1246,86 @@
     });
   }
 
+  function normalizeText(text) {
+    return text
+      .toLowerCase()
+      .replace(/[^a-zA-Zа-яА-ЯёЁ0-9]/g, '') // удаляем все спецсимволы, оставляем только буквы и цифры
+      .replace(/ё/g, 'е'); // заменяем ё на е для унификации
+  }
+
+  // Улучшенная функция проверки на нецензурную лексику
+  function containsForbiddenWords(text) {
+    if (!text) return false;
+
+    const normalizedText = normalizeText(text);
+
+    return forbiddenWords.some(forbiddenWord => {
+      const normalizedForbidden = normalizeText(forbiddenWord);
+      return normalizedText.includes(normalizedForbidden);
+    });
+  }
+
+  // Функция для проверки замены букв (например: с0б@ка, $обака и т.д.)
+  function containsForbiddenWithReplacements(text) {
+    if (!text) return false;
+
+    const replacementPatterns = {
+      'а': ['а', 'a', '@', '4'],
+      'б': ['б', '6', 'b'],
+      'в': ['в', 'b', 'v'],
+      'е': ['е', 'e', 'ё'],
+      'з': ['з', '3', 'z'],
+      'и': ['и', 'i', 'u'],
+      'к': ['к', 'k'],
+      'о': ['о', 'o', '0'],
+      'п': ['п', 'n', 'p'],
+      'с': ['с', 'c', 's', '$'],
+      'у': ['у', 'y', 'u'],
+      'х': ['х', 'x', 'h'],
+      'ч': ['ч', '4'],
+      'я': ['я', 'ya']
+    };
+
+    // Генерируем все возможные варианты для каждого запрещенного слова
+    for (const forbiddenWord of forbiddenWords) {
+      const patterns = generatePatterns(forbiddenWord, replacementPatterns);
+      for (const pattern of patterns) {
+        if (new RegExp(pattern, 'gi').test(text)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  // Генерация паттернов с учетом замен букв
+  function generatePatterns(word, replacements) {
+    const patterns = [''];
+
+    for (const char of word) {
+      const charReplacements = replacements[char] || [char];
+      const newPatterns = [];
+
+      for (const pattern of patterns) {
+        for (const replacement of charReplacements) {
+          newPatterns.push(pattern + replacement);
+        }
+      }
+
+      patterns.length = 0;
+      patterns.push(...newPatterns);
+    }
+
+    return patterns;
+  }
+
+  // Финальная функция проверки
+  function validateText(text) {
+    return !containsForbiddenWords(text) &&
+      !containsForbiddenWithReplacements(text);
+  }
+
   // Отправка новой метки с фото
   async function submitNewMarker() {
     const name = document.getElementById('marker-name').value;
@@ -1256,6 +1338,13 @@
       alert('Заполните обязательные поля');
       return;
     }
+
+    // Проверка на нецензурную лексику
+    if (!validateText(name) || !validateText(description)) {
+      alert('Название или описание содержит недопустимые слова. Пожалуйста, измените текст.');
+      return;
+    }
+
 
     // Показываем уведомление о начале загрузки
     alert('Отправка данных... Это может занять несколько секунд');
