@@ -1219,7 +1219,6 @@
                     Статус: ${point.status || 'не указан'}<br>
                     ${formatDescription(point.description)}<br>
                     ${photoUrl ? `<img src="${photoUrl}" style="max-width: 200px; max-height: 150px; object-fit: cover;"><br>` : ''}
-                    <small>Добавлено: ${point.date || 'не указано'}</small>
                   </div>
                 `);
 
@@ -1373,7 +1372,6 @@
         <b>${name}</b><br>
         Статус: ${status}<br>
         ${description ? description + '<br>' : ''}
-        <small>Добавлено: ${new Date().toLocaleDateString()}</small>
       </div>
     `;
 
